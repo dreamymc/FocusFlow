@@ -16,10 +16,6 @@ class InvitationController extends Controller
 {
     public function invite(StoreInvitationRequest $request, Workspace $workspace, InviteMemberAction $inviteMemberAction): JsonResponse
     {
-        $pivot = $request->user()->workspaces()->where('workspaces.id', $workspace->id)->first()?->pivot;
-        if (!$pivot || $pivot->role !== WorkspaceRole::Admin->value) {
-            abort(403, 'Only workspace admins can invite new members.');
-        }
 
         $invitation = $inviteMemberAction->execute(
             $workspace,
@@ -37,10 +33,8 @@ class InvitationController extends Controller
         ], 201);
     }
 
-    public function accept(Request $request, AcceptInviteAction $acceptInviteAction): JsonResponse
+    public function accept(\App\Http\Requests\AcceptInvitationRequest $request, AcceptInviteAction $acceptInviteAction): JsonResponse
     {
-        $request->validate(['token' => 'required|string']);
-
         $workspace = $acceptInviteAction->execute(
             $request->input('token'),
             $request->user()

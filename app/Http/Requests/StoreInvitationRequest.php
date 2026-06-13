@@ -10,7 +10,10 @@ class StoreInvitationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $workspace = $this->route('workspace');
+        $pivot = $this->user()->workspaces()->where('workspaces.id', $workspace->id)->first()?->pivot;
+        
+        return $pivot && $pivot->role === WorkspaceRole::Admin->value;
     }
 
     public function rules(): array

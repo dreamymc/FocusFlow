@@ -27,12 +27,8 @@ class WorkspaceController extends Controller
         return (new WorkspaceResource($workspace))->response()->setStatusCode(201);
     }
 
-    public function show(Workspace $workspace): WorkspaceResource
+    public function show(\App\Http\Requests\ShowWorkspaceRequest $request, Workspace $workspace): WorkspaceResource
     {
-        if (!auth()->user()->workspaces()->where('workspaces.id', $workspace->id)->exists()) {
-            abort(403, 'You do not have access to this workspace.');
-        }
-
         return new WorkspaceResource($workspace);
     }
 }
