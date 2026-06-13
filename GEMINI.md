@@ -114,45 +114,26 @@ This project is built with **loops, not one-shot prompts**.
 
 ---
 
-## 🪄 Parallel CLI Sessions
+## 🪄 Native Subagent Orchestration
 
-You can accelerate builds significantly by opening **multiple terminal windows**
-at the same project directory. Each terminal runs its own `agents` session.
-They share the filesystem, so coordination is critical.
+You no longer need to open multiple manual terminal windows. Antigravity can natively spawn parallel workers using the `invoke_subagent` tool. All work is coordinated from the single Orchestrator session.
 
 ### How to split work safely:
 
-**Terminal A (Orchestrator)** — runs the main session, reads GEMINI.md, dispatches tasks:
-```bash
-cd focusflow && agy
-```
-
-**Terminal B (Backend)** — implements a feature independently:
-```bash
-cd focusflow && agy --max-turns 30
-# Prompt: "Load .agents/agents/backend-engineer.md. Implement [Task X].
-#          Only touch: app/Actions/, app/Services/, app/Http/Controllers/.
-#          Do NOT touch migrations or .env."
-```
-
-**Terminal C (Tests)** — writes and runs tests in parallel:
-```bash
-cd focusflow && agy --max-turns 20
-# Prompt: "Load .agents/agents/tdd-engineer.md. Write Pest tests for [Task X].
-#          Only touch: tests/Feature/ and tests/Unit/.
-#          Do NOT touch app/ code."
-```
+**The Orchestrator (Main Session)** — Reads GEMINI.md and dispatches tasks:
+- Uses `invoke_subagent` to spawn specialized agents (e.g., `tdd-engineer`, `backend-engineer`).
+- Each subagent runs in the background.
+- The Orchestrator waits for their completion messages, merges the work, and runs tests.
 
 ### Parallel-safe rules:
-- **Never** run two agents that modify migrations simultaneously
-- **Never** run two agents that modify `.env` or `config/` simultaneously
-- **Always** assign strictly non-overlapping file paths to each CLI
-- Use a `LOCK.md` file in root: any CLI that "owns" a domain writes its name there first
-- After parallel work, the Orchestrator (Terminal A) merges and runs `php artisan test`
+- **Never** spawn two subagents that modify migrations simultaneously.
+- **Never** spawn two subagents that modify `.env` or `config/` simultaneously.
+- **Always** assign strictly non-overlapping file paths to each subagent in their Prompt.
+- The Orchestrator is responsible for running `php artisan test` after subagents complete to verify integration.
 
-### Recommended Parallel Splits by Phase:
+### Recommended Subagent Splits by Phase:
 
-| Phase | Terminal A | Terminal B | Terminal C |
+| Phase | Subagent 1 | Subagent 2 | Subagent 3 |
 |-------|------------|------------|------------|
 | Phase 2 | Workspace CRUD + migrations | Task model + API | Pest tests for both |
 | Phase 3 | Reverb channels setup | Frontend Echo setup | WebSocket integration tests |
