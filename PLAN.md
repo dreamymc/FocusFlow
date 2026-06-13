@@ -53,14 +53,14 @@
 - [x] `P1-09` `WorkspaceScope` middleware — all subsequent requests scoped to workspace
 - [x] `P1-10` `InviteMemberAction` + `AcceptInviteAction` (email invite flow)
 - [x] `P1-11` API Resources: `UserResource`, `WorkspaceResource`
-- [ ] `P1-12` Feature tests (Pest): register, login, logout, create workspace, invite member
-- [ ] `P1-13` Security audit: OWASP top 10 check on auth endpoints
+- [x] `P1-12` Feature tests (Pest): register, login, logout, create workspace, invite member
+- [x] `P1-13` Security audit: OWASP top 10 check on auth endpoints
 
 **Phase 1 Exit Conditions:**
-- [ ] `php artisan test --filter=Auth` → all green
-- [ ] Postman collection: auth flows all return correct status codes
-- [ ] `security-auditor` agent approved
-- [ ] Tag: `git tag v0.2.0-phase-1`
+- [x] `php artisan test --filter=Auth` → all green
+- [x] Postman collection: auth flows all return correct status codes
+- [x] `security-auditor` agent approved
+- [x] Tag: `git tag v0.2.0-phase-1`
 
 ---
 
@@ -220,7 +220,7 @@
 | Phase | Status | Commit | Tag |
 |-------|--------|--------|-----|
 | 0 — Setup | ✅ Complete | — | v0.1.0-phase-0 |
-| 1 — Auth | 🔄 In progress | — | — |
+| 1 — Auth | ✅ Complete | — | v0.2.0-phase-1 |
 | 2 — API | 🔄 In progress | — | — |
 | 3 — WebSockets | ⬜ Not started | — | — |
 | 4 — Integrations | ⬜ Not started | — | — |

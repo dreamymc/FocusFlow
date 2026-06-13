@@ -8,7 +8,8 @@
 
 ## Active Sessions
 
-| security-auditor | app/Http/Controllers/Api/V1/, app/Actions/, app/Http/Requests/ | Phase 1 Security Audit | In Progress |
+| Terminal | Files | Purpose | Status |
+| — | — | — | — |
 
 ---
 
