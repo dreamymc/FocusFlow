@@ -8,8 +8,7 @@
 
 ## Active Sessions
 
-| Terminal | Owns (directories/files) | Task | Status |
-|----------|--------------------------|------|--------|
+| Terminal A (Backend) | database/migrations/, app/Models/, app/Enums/, app/Actions/, app/Http/ | Phase 1 & 2 Implementation | In Progress |
 | — | — | — | — |
 
 ---

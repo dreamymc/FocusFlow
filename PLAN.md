@@ -14,19 +14,19 @@
 **Loop:** No TDD loop here — setup tasks only. Verify with `php artisan serve`.
 
 ### Tasks:
-- [ ] `P0-01` Create Laravel 11 project, initialize Git, create `main` + `dev` branches
-- [ ] `P0-02` Install all production packages: Sanctum, Reverb, Horizon, Cashier, Spatie Permission, Tenancy
-- [ ] `P0-03` Install dev packages: Pest, pest-plugin-laravel, Laravel IDE Helper
-- [ ] `P0-04` Configure `.env.example` (PostgreSQL, Redis, Stripe, Reverb, Slack webhook)
-- [ ] `P0-05` Set up GitHub Actions CI: runs `php artisan test` on every push
-- [ ] `P0-06` Add this `.agents/` folder structure to the repo and commit
-- [ ] `P0-07` Write `ARCHITECTURE.md` — one-page decision log (multi-tenancy strategy, API versioning)
+- [x] `P0-01` Create Laravel 11 project, initialize Git, create `main` + `dev` branches
+- [x] `P0-02` Install all production packages: Sanctum, Reverb, Horizon, Cashier, Spatie Permission, Tenancy
+- [x] `P0-03` Install dev packages: Pest, pest-plugin-laravel, Laravel IDE Helper
+- [x] `P0-04` Configure `.env.example` (PostgreSQL, Redis, Stripe, Reverb, Slack webhook)
+- [x] `P0-05` Set up GitHub Actions CI: runs `php artisan test` on every push
+- [x] `P0-06` Add this `.agents/` folder structure to the repo and commit
+- [x] `P0-07` Write `ARCHITECTURE.md` — one-page decision log (multi-tenancy strategy, API versioning)
 
 **Phase 0 Exit Conditions:**
-- [ ] `php artisan serve` starts without errors
-- [ ] `php artisan test` shows 0 tests, 0 failures (baseline)
-- [ ] GitHub Actions pipeline passes on first push
-- [ ] Tag: `git tag v0.1.0-phase-0`
+- [x] `php artisan serve` starts without errors
+- [x] `php artisan test` shows 0 tests, 0 failures (baseline)
+- [x] GitHub Actions pipeline passes on first push
+- [x] Tag: `git tag v0.1.0-phase-0`
 
 ---
 
@@ -219,7 +219,7 @@
 
 | Phase | Status | Commit | Tag |
 |-------|--------|--------|-----|
-| 0 — Setup | ⬜ Not started | — | — |
+| 0 — Setup | ✅ Complete | — | v0.1.0-phase-0 |
 | 1 — Auth | ⬜ Not started | — | — |
 | 2 — API | ⬜ Not started | — | — |
 | 3 — WebSockets | ⬜ Not started | — | — |
