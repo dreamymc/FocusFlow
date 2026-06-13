@@ -8,8 +8,7 @@
 
 ## Active Sessions
 
-| Terminal A (Workspace) | app/Http/Middleware/WorkspaceScope.php, app/Models/Workspace.php, app/Http/Controllers/Api/V1/WorkspaceController.php, app/Actions/CreateWorkspaceAction.php, app/Actions/InviteMemberAction.php, app/Actions/AcceptInviteAction.php | Phase 1 Workspace Implementation | In Progress |
-| Terminal C (Tests) | tests/Feature/, tests/Unit/ | Phase 1 & 2 Pest tests | In Progress |
+| security-auditor | app/Http/Controllers/Api/V1/, app/Actions/, app/Http/Requests/ | Phase 1 Security Audit | In Progress |
 
 ---
 
