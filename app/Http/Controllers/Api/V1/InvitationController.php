@@ -28,7 +28,7 @@ class InvitationController extends Controller
         );
 
         return response()->json([
-            'message' => 'Invite sent successfully',
+            'message' => 'Invitation sent successfully.',
             'data' => [
                 'email' => $invitation->email,
                 'role' => $invitation->role->value,
@@ -37,15 +37,17 @@ class InvitationController extends Controller
         ], 201);
     }
 
-    public function accept(Request $request, string $token, AcceptInviteAction $acceptInviteAction): JsonResponse
+    public function accept(Request $request, AcceptInviteAction $acceptInviteAction): JsonResponse
     {
+        $request->validate(['token' => 'required|string']);
+
         $workspace = $acceptInviteAction->execute(
-            $token,
+            $request->input('token'),
             $request->user()
         );
 
         return response()->json([
-            'message' => 'Invite accepted',
+            'message' => 'Joined workspace successfully.',
             'data' => new WorkspaceResource($workspace)
         ], 200);
     }

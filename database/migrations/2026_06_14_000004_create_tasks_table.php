@@ -14,8 +14,8 @@ return new class extends Migration
             $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('status')->default('backlog');
-            $table->string('priority')->default('medium');
+            $table->string('status')->default('backlog')->index();
+            $table->string('priority')->default('medium')->index();
             $table->timestamps();
         });
     }

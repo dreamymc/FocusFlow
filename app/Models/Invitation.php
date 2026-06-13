@@ -12,8 +12,6 @@ class Invitation extends Model
 {
     use HasFactory;
 
-    protected $table = 'workspace_invites';
-
     protected $fillable = [
         'workspace_id',
         'email',
@@ -30,5 +28,11 @@ class Invitation extends Model
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
+    }
+
+    public function scopeForWorkspace(\Illuminate\Database\Eloquent\Builder $query, Workspace|int $workspace): \Illuminate\Database\Eloquent\Builder
+    {
+        $id = $workspace instanceof Workspace ? $workspace->id : $workspace;
+        return $query->where('workspace_id', $id);
     }
 }
