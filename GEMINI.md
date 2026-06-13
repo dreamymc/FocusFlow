@@ -19,7 +19,15 @@ Code must be production-quality: clean, tested, documented.
 
 ## 📚 Skills — Load Before Coding
 
-Before writing ANY code, load the relevant skill. Skills are in `.agents/skills/`.
+> **🚨 CRITICAL MEMORY REMINDER: DO NOT IGNORE THIS 🚨**
+> You have dozens of powerful GLOBAL SKILLS installed in `~/.gemini/antigravity-cli/skills/`.
+> BEFORE taking ANY action, you **MUST** run the `using-superpowers` skill to evaluate what global skills apply.
+> If fixing a bug or test: you **MUST** use `systematic-debugging` before guessing.
+> If finishing a task: you **MUST** use `requesting-code-review` via a subagent.
+> If auditing before push: you **MUST** use `codebase-audit-pre-push`.
+> **Violating this rule is considered a total failure.**
+
+Before writing ANY project code, load the relevant project-specific skill. Skills are in `.agents/skills/`.
 
 | Task | Load Skill |
 |------|------------|
@@ -30,7 +38,7 @@ Before writing ANY code, load the relevant skill. Skills are in `.agents/skills/
 | Stripe / billing | `.agents/skills/stripe-cashier.md` |
 | Any auth/security work | `.agents/skills/security.md` |
 
-**Rule:** Never generate a file without the matching skill loaded. This is non-negotiable.
+**Rule:** Never generate a file without the matching skill loaded. Never assume you don't need a global skill. This is non-negotiable.
 
 ---
 
