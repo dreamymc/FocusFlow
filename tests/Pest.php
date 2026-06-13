@@ -48,3 +48,24 @@ function something()
 {
     // ..
 }
+
+function createWorkspaceWithUser(\App\Enums\WorkspaceRole $role): array
+{
+    $user = \App\Models\User::factory()->create();
+    
+    // We use the action to set up the workspace and assign Spatie permissions correctly
+    $workspace = app(\App\Actions\CreateWorkspaceAction::class)->execute('Test Workspace', $user);
+    
+    // Set permissions team context
+    app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($workspace->id);
+    \Spatie\Permission\Models\Role::findOrCreate(\App\Enums\WorkspaceRole::Member->value);
+    \Spatie\Permission\Models\Role::findOrCreate(\App\Enums\WorkspaceRole::Viewer->value);
+    
+    if ($role !== \App\Enums\WorkspaceRole::Admin) {
+        $user->removeRole(\App\Enums\WorkspaceRole::Admin->value);
+        $user->assignRole($role->value);
+        $workspace->users()->updateExistingPivot($user->id, ['role' => $role->value]);
+    }
+    
+    return [$workspace, $user];
+}

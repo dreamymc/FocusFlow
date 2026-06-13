@@ -12,15 +12,15 @@ it('invites a member to a workspace successfully', function () {
     $workspace->users()->attach($admin, ['role' => 'admin']);
 
     $response = $this->actingAs($admin)
-        ->postJson("/api/v1/workspaces/{$workspace->id}/invites", [
+        ->postJson("/api/v1/workspaces/{$workspace->id}/invite", [
             'email' => 'new-member@example.com',
             'role' => 'member',
         ]);
 
     $response->assertCreated()
-        ->assertJson(['message' => 'Invite sent successfully']);
+        ->assertJson(['message' => 'Invitation sent successfully.']);
 
-    $this->assertDatabaseHas('workspace_invites', [
+    $this->assertDatabaseHas('invitations', [
         'workspace_id' => $workspace->id,
         'email' => 'new-member@example.com',
         'role' => 'member',
@@ -33,7 +33,7 @@ it('prevents non-admins from inviting members', function () {
     $workspace->users()->attach($member, ['role' => 'member']);
 
     $response = $this->actingAs($member)
-        ->postJson("/api/v1/workspaces/{$workspace->id}/invites", [
+        ->postJson("/api/v1/workspaces/{$workspace->id}/invite", [
             'email' => 'another@example.com',
             'role' => 'member',
         ]);
@@ -47,7 +47,7 @@ it('validates invite data', function () {
     $workspace->users()->attach($admin, ['role' => 'admin']);
 
     $response = $this->actingAs($admin)
-        ->postJson("/api/v1/workspaces/{$workspace->id}/invites", [
+        ->postJson("/api/v1/workspaces/{$workspace->id}/invite", [
             'email' => 'not-an-email',
             'role' => 'invalid-role',
         ]);

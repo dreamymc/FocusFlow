@@ -22,13 +22,13 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('workspaces', WorkspaceController::class);
 
         // Accept invitation
-        Route::post('/invitations/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
+        Route::post('workspaces/invites/{token}/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
 
         // Workspace-scoped routes
         Route::prefix('workspaces/{workspace}')
             ->middleware('scope.workspace')
             ->group(function () {
-                Route::post('/invite', [InvitationController::class, 'invite'])->name('workspaces.invite');
+                Route::post('/invites', [InvitationController::class, 'invite'])->name('workspaces.invite');
                 Route::apiResource('projects', ProjectController::class);
                 Route::apiResource('projects.tasks', TaskController::class);
                 Route::put('tasks/{task}/move', [TaskController::class, 'move'])->name('tasks.move');

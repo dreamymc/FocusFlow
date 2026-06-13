@@ -12,6 +12,8 @@ class Invitation extends Model
 {
     use HasFactory;
 
+    protected $table = 'workspace_invites';
+
     protected $fillable = [
         'workspace_id',
         'email',

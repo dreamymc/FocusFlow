@@ -24,7 +24,7 @@ class WorkspaceController extends Controller
             $request->user()
         );
 
-        return new WorkspaceResource($workspace);
+        return (new WorkspaceResource($workspace))->response()->setStatusCode(201);
     }
 
     public function show(Workspace $workspace): WorkspaceResource

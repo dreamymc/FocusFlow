@@ -13,20 +13,14 @@ class AcceptInviteAction
 {
     public function execute(string $token, User $user): Workspace
     {
-        $invitation = Invitation::where('token', $token)
-            ->where('status', InviteStatus::Pending->value)
-            ->first();
+        $invitation = Invitation::where('token', $token)->first();
 
         if (!$invitation) {
-            throw ValidationException::withMessages([
-                'token' => ['Invalid or expired invitation token.'],
-            ]);
+            abort(404, 'Invalid or expired invitation token.');
         }
 
         if ($invitation->email !== $user->email) {
-            throw ValidationException::withMessages([
-                'email' => ['This invitation was sent to a different email address.'],
-            ]);
+            abort(403, 'This invitation was sent to a different email address.');
         }
 
         $workspace = $invitation->workspace;
@@ -39,9 +33,7 @@ class AcceptInviteAction
         $registrar->setPermissionsTeamId($workspace->id);
         $user->assignRole($invitation->role->value);
 
-        $invitation->update([
-            'status' => InviteStatus::Accepted->value,
-        ]);
+        $invitation->delete();
 
         return $workspace;
     }

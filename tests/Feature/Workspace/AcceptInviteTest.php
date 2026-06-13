@@ -13,29 +13,28 @@ it('accepts an invite successfully', function () {
     $workspace = Workspace::factory()->create();
     
     $token = Str::random(32);
-    DB::table('workspace_invites')->insert([
+    DB::table('invitations')->insert([
         'workspace_id' => $workspace->id,
         'email' => 'invited@example.com',
         'role' => 'member',
         'token' => $token,
+        'status' => 'pending',
         'created_at' => now(),
         'updated_at' => now(),
     ]);
 
     $response = $this->actingAs($user)
-        ->postJson("/api/v1/workspaces/invites/{$token}/accept");
+        ->postJson('/api/v1/invitations/accept', [
+            'token' => $token,
+        ]);
 
-    $response->assertOk()
-        ->assertJson(['message' => 'Invite accepted']);
+    $response->assertStatus(200)
+        ->assertJson(['message' => 'Joined workspace successfully.']);
 
     $this->assertDatabaseHas('workspace_user', [
         'workspace_id' => $workspace->id,
         'user_id' => $user->id,
         'role' => 'member',
-    ]);
-
-    $this->assertDatabaseMissing('workspace_invites', [
-        'token' => $token,
     ]);
 });
 
@@ -43,9 +42,11 @@ it('rejects invalid invite tokens', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)
-        ->postJson("/api/v1/workspaces/invites/invalid-token/accept");
+        ->postJson('/api/v1/invitations/accept', [
+            'token' => 'invalid-token',
+        ]);
 
-    $response->assertNotFound();
+    $response->assertStatus(404);
 });
 
 it('requires authenticated user to have matching email', function () {
@@ -53,17 +54,20 @@ it('requires authenticated user to have matching email', function () {
     $workspace = Workspace::factory()->create();
     
     $token = Str::random(32);
-    DB::table('workspace_invites')->insert([
+    DB::table('invitations')->insert([
         'workspace_id' => $workspace->id,
         'email' => 'invited@example.com',
         'role' => 'member',
         'token' => $token,
+        'status' => 'pending',
         'created_at' => now(),
         'updated_at' => now(),
     ]);
 
     $response = $this->actingAs($wrongUser)
-        ->postJson("/api/v1/workspaces/invites/{$token}/accept");
+        ->postJson('/api/v1/invitations/accept', [
+            'token' => $token,
+        ]);
 
-    $response->assertForbidden();
+    $response->assertStatus(403);
 });

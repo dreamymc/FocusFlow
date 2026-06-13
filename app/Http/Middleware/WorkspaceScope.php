@@ -29,7 +29,7 @@ class WorkspaceScope
         app()->instance(Workspace::class, $workspace);
 
         if (class_exists(\Spatie\Permission\PermissionRegistrar::class)) {
-            setPermissionsTeamId($workspace->id);
+            app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($workspace->id);
         }
 
         return $next($request);
