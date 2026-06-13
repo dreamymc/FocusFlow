@@ -12,7 +12,7 @@ it('logs in a user successfully', function () {
         'password' => bcrypt('password123'),
     ]);
 
-    $response = $this->postJson('/api/v1/auth/login', [
+    $response = $this->postJson('/api/v1/login', [
         'email' => 'test@example.com',
         'password' => 'password123',
     ]);
@@ -31,7 +31,7 @@ it('fails to log in with incorrect password', function () {
         'password' => bcrypt('password123'),
     ]);
 
-    $response = $this->postJson('/api/v1/auth/login', [
+    $response = $this->postJson('/api/v1/login', [
         'email' => 'test@example.com',
         'password' => 'wrong-password',
     ]);

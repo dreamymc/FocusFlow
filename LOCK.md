@@ -8,8 +8,7 @@
 
 ## Active Sessions
 
-| Terminal A (Backend) | database/migrations/, app/Models/, app/Enums/, app/Actions/, app/Http/ | Phase 1 & 2 Implementation | In Progress |
-| — | — | — | — |
+| Terminal A (Workspace) | app/Http/Middleware/WorkspaceScope.php, app/Models/Workspace.php, app/Http/Controllers/Api/V1/WorkspaceController.php, app/Actions/CreateWorkspaceAction.php, app/Actions/InviteMemberAction.php, app/Actions/AcceptInviteAction.php | Phase 1 Workspace Implementation | In Progress |
 
 ---
 

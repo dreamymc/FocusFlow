@@ -42,17 +42,17 @@
 > (Non-overlapping files ✅)
 
 ### Tasks:
-- [ ] `P1-01` Migrations: `users`, `workspaces`, `workspace_user` pivot (with `role` enum column)
-- [ ] `P1-02` Enums: `WorkspaceRole` (Admin, Member, Viewer), `InviteStatus`
-- [ ] `P1-03` Models: `User`, `Workspace` with relationships + `$fillable`
-- [ ] `P1-04` `RegisterAction` + `CreateWorkspaceAction` — one class per use-case
-- [ ] `P1-05` `RegisterController`, `LoginController`, `LogoutController` in `Api/V1/Auth/`
-- [ ] `P1-06` FormRequests: `RegisterRequest`, `LoginRequest` with validation rules
-- [ ] `P1-07` Sanctum setup: token issuance on login, revocation on logout
-- [ ] `P1-08` Spatie Permission: seed roles (`admin`, `member`, `viewer`) per workspace
-- [ ] `P1-09` `WorkspaceScope` middleware — all subsequent requests scoped to workspace
-- [ ] `P1-10` `InviteMemberAction` + `AcceptInviteAction` (email invite flow)
-- [ ] `P1-11` API Resources: `UserResource`, `WorkspaceResource`
+- [x] `P1-01` Migrations: `users`, `workspaces`, `workspace_user` pivot (with `role` enum column)
+- [x] `P1-02` Enums: `WorkspaceRole` (Admin, Member, Viewer), `InviteStatus`
+- [x] `P1-03` Models: `User`, `Workspace` with relationships + `$fillable`
+- [x] `P1-04` `RegisterAction` + `CreateWorkspaceAction` — one class per use-case
+- [x] `P1-05` `RegisterController`, `LoginController`, `LogoutController` in `Api/V1/Auth/`
+- [x] `P1-06` FormRequests: `RegisterRequest`, `LoginRequest` with validation rules
+- [x] `P1-07` Sanctum setup: token issuance on login, revocation on logout
+- [x] `P1-08` Spatie Permission: seed roles (`admin`, `member`, `viewer`) per workspace
+- [x] `P1-09` `WorkspaceScope` middleware — all subsequent requests scoped to workspace
+- [x] `P1-10` `InviteMemberAction` + `AcceptInviteAction` (email invite flow)
+- [x] `P1-11` API Resources: `UserResource`, `WorkspaceResource`
 - [ ] `P1-12` Feature tests (Pest): register, login, logout, create workspace, invite member
 - [ ] `P1-13` Security audit: OWASP top 10 check on auth endpoints
 
@@ -77,20 +77,20 @@
 > (File paths are non-overlapping ✅)
 
 ### Tasks:
-- [ ] `P2-01` Migrations: `projects`, `tasks`, `task_assignees`, `labels`, `task_label` pivot
-- [ ] `P2-02` Enums: `TaskStatus` (Backlog, InProgress, InReview, Done), `TaskPriority`
-- [ ] `P2-03` Models: `Project`, `Task`, `Label` with Eloquent relationships
-- [ ] `P2-04` Eloquent scopes: `scopeForWorkspace()`, `scopeAssignedTo()`, `scopeByStatus()`
-- [ ] `P2-05` Actions: `CreateProjectAction`, `UpdateProjectAction`, `DeleteProjectAction`
-- [ ] `P2-06` Actions: `CreateTaskAction`, `UpdateTaskAction`, `MoveTaskAction`, `DeleteTaskAction`
-- [ ] `P2-07` Controllers: `ProjectController`, `TaskController` (RESTful, thin, call Actions)
-- [ ] `P2-08` FormRequests: `StoreProjectRequest`, `StoreTaskRequest`, `UpdateTaskRequest`
-- [ ] `P2-09` API Resources: `ProjectResource`, `TaskResource`, `TaskCollection` (with pagination)
-- [ ] `P2-10` Route versioning: all routes under `/api/v1/workspaces/{workspace}/...`
-- [ ] `P2-11` Rate limiting: 60 req/min per token via `RateLimiter::for('api', ...)`
-- [ ] `P2-12` Filtering: `?status=in_progress&assignee=me&sort=priority` query params
+- [x] `P2-01` Migrations: `projects`, `tasks`, `task_assignees`, `labels`, `task_label` pivot
+- [x] `P2-02` Enums: `TaskStatus` (Backlog, InProgress, InReview, Done), `TaskPriority`
+- [x] `P2-03` Models: `Project`, `Task`, `Label` with Eloquent relationships
+- [x] `P2-04` Eloquent scopes: `scopeForWorkspace()`, `scopeAssignedTo()`, `scopeByStatus()`
+- [x] `P2-05` Actions: `CreateProjectAction`, `UpdateProjectAction`, `DeleteProjectAction`
+- [x] `P2-06` Actions: `CreateTaskAction`, `UpdateTaskAction`, `MoveTaskAction`, `DeleteTaskAction`
+- [x] `P2-07` Controllers: `ProjectController`, `TaskController` (RESTful, thin, call Actions)
+- [x] `P2-08` FormRequests: `StoreProjectRequest`, `StoreTaskRequest`, `UpdateTaskRequest`
+- [x] `P2-09` API Resources: `ProjectResource`, `TaskResource`, `TaskCollection` (with pagination)
+- [x] `P2-10` Route versioning: all routes under `/api/v1/workspaces/{workspace}/...`
+- [x] `P2-11` Rate limiting: 60 req/min per token via `RateLimiter::for('api', ...)`
+- [x] `P2-12` Filtering: `?status=in_progress&assignee=me&sort=priority` query params
 - [ ] `P2-13` Feature tests: full CRUD for Project and Task, authorization tests per role
-- [ ] `P2-14` Authorization: Policies (`ProjectPolicy`, `TaskPolicy`) — Viewer can't write
+- [x] `P2-14` Authorization: Policies (`ProjectPolicy`, `TaskPolicy`) — Viewer can't write
 
 **Phase 2 Exit Conditions:**
 - [ ] `php artisan test --filter=Task,Project` → all green
@@ -220,8 +220,8 @@
 | Phase | Status | Commit | Tag |
 |-------|--------|--------|-----|
 | 0 — Setup | ✅ Complete | — | v0.1.0-phase-0 |
-| 1 — Auth | ⬜ Not started | — | — |
-| 2 — API | ⬜ Not started | — | — |
+| 1 — Auth | 🔄 In progress | — | — |
+| 2 — API | 🔄 In progress | — | — |
 | 3 — WebSockets | ⬜ Not started | — | — |
 | 4 — Integrations | ⬜ Not started | — | — |
 | 5 — Hardening | ⬜ Not started | — | — |

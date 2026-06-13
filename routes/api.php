@@ -5,12 +5,14 @@ use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\WorkspaceController;
 use App\Http\Controllers\Api\V1\InvitationController;
+use App\Http\Controllers\Api\V1\ProjectController;
+use App\Http\Controllers\Api\V1\TaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     // Guest routes
     Route::post('/register', RegisterController::class)->name('register');
-    Route::post('/login', LoginController::class)->name('login');
+    Route::post('/login', LoginController::class)->name('login')->middleware('throttle:auth');
 
     // Authenticated routes
     Route::middleware('auth:sanctum')->group(function () {
@@ -27,6 +29,9 @@ Route::prefix('v1')->group(function () {
             ->middleware('scope.workspace')
             ->group(function () {
                 Route::post('/invite', [InvitationController::class, 'invite'])->name('workspaces.invite');
+                Route::apiResource('projects', ProjectController::class);
+                Route::apiResource('projects.tasks', TaskController::class);
+                Route::put('tasks/{task}/move', [TaskController::class, 'move'])->name('tasks.move');
             });
     });
 });
