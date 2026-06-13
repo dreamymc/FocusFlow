@@ -188,6 +188,6 @@ npx skills add PauloFelipeM/agent-laravel-skills   # community Laravel skills
 
 > **Update this line as you complete phases.**
 
-`CURRENT PHASE: 0 — Setup & Scaffolding`
+`CURRENT PHASE: 3 — Real-Time Features (WebSockets)`
 
-Completed phases: none
+Completed phases: 0, 1, 2

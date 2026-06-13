@@ -89,14 +89,14 @@
 - [x] `P2-10` Route versioning: all routes under `/api/v1/workspaces/{workspace}/...`
 - [x] `P2-11` Rate limiting: 60 req/min per token via `RateLimiter::for('api', ...)`
 - [x] `P2-12` Filtering: `?status=in_progress&assignee=me&sort=priority` query params
-- [ ] `P2-13` Feature tests: full CRUD for Project and Task, authorization tests per role
+- [x] `P2-13` Feature tests: full CRUD for Project and Task, authorization tests per role
 - [x] `P2-14` Authorization: Policies (`ProjectPolicy`, `TaskPolicy`) — Viewer can't write
 
 **Phase 2 Exit Conditions:**
-- [ ] `php artisan test --filter=Task,Project` → all green
-- [ ] `php artisan route:list` shows no unnamed routes
-- [ ] API returns consistent JSON structure: `{data: ..., meta: ..., links: ...}`
-- [ ] Tag: `git tag v0.3.0-phase-2`
+- [x] `php artisan test --filter=Task,Project` → all green
+- [x] `php artisan route:list` shows no unnamed routes
+- [x] API returns consistent JSON structure: `{data: ..., meta: ..., links: ...}`
+- [x] Tag: `git tag v0.3.0-phase-2`
 
 ---
 
@@ -221,8 +221,8 @@
 |-------|--------|--------|-----|
 | 0 — Setup | ✅ Complete | — | v0.1.0-phase-0 |
 | 1 — Auth | ✅ Complete | — | v0.2.0-phase-1 |
-| 2 — API | 🔄 In progress | — | — |
-| 3 — WebSockets | ⬜ Not started | — | — |
+| 2 — API | ✅ Complete | — | v0.3.0-phase-2 |
+| 3 — WebSockets | 🔄 In progress | — | — |
 | 4 — Integrations | ⬜ Not started | — | — |
 | 5 — Hardening | ⬜ Not started | — | — |
 | 6 — Polish | ⬜ Not started | — | — |
