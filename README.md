@@ -86,7 +86,7 @@ docker-compose up -d
 ### 3. Migrate & Seed
 Run migrations and populate the database with realistic sample data:
 ```bash
-php artisan migrate:fresh --seed --class=DemoSeeder
+php artisan migrate:fresh --seed --seeder=DemoSeeder
 ```
 
 ### 4. Start the Application
@@ -99,8 +99,15 @@ php artisan serve
 php artisan reverb:start
 
 # Terminal 3: Vite Frontend
-npm install && npm run dev
+pnpm install && pnpm run dev
 ```
+
+### 5. Test the Real-Time WebSockets
+Open your browser to `http://localhost:8000` to access the **Interactive WebSocket Demo**. 
+Since FocusFlow is primarily a headless API, we included a lightweight Vue 3 harness to demonstrate Reverb WebSockets in real-time.
+- Import the Postman collection located at `docs/postman/FocusFlow.postman_collection.json`.
+- Trigger the "Move Task" API endpoint or fire an event via Tinker.
+- Watch the Notification Bell on the dashboard light up instantly!
 
 ---
 

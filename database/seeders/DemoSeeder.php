@@ -44,20 +44,22 @@ class DemoSeeder extends Seeder
         ]);
 
         // Helper to create tasks with varying status/priority
-        $statuses = ['todo', 'in_progress', 'done'];
+        $statuses = ['backlog', 'in_progress', 'in_review', 'done'];
         $priorities = ['low', 'medium', 'high'];
 
         foreach ([$projectA, $projectB] as $project) {
             for ($i = 1; $i <= 5; $i++) {
-                Task::create([
+                $task = Task::create([
                     'workspace_id' => $workspace->id,
                     'project_id' => $project->id,
                     'title' => "Task {$i} for {$project->name}",
                     'description' => "Auto‑generated description for task {$i}.",
                     'status' => $statuses[array_rand($statuses)],
                     'priority' => $priorities[array_rand($priorities)],
-                    'assignee_id' => ($i % 2 === 0) ? $member->id : $admin->id,
                 ]);
+
+                $assignee = ($i % 2 === 0) ? $member : $admin;
+                $task->assignees()->attach($assignee->id);
             }
         }
     }
