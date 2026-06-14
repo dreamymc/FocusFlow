@@ -13,20 +13,6 @@
   <a href="https://vuejs.org/"><img src="https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat-square&logo=vuedotjs" alt="Vue 3"></a>
 </p>
 
-<h1 align="center">FocusFlow</h1>
-
-<p align="center">
-  <strong>A high-performance, multi-tenant team productivity SaaS built with Laravel 11.</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/dreamymc/focusflow/actions"><img src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" alt="Build Status"></a>
-  <a href="https://github.com/dreamymc/focusflow/actions"><img src="https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square" alt="Coverage"></a>
-  <a href="https://phpstan.org/"><img src="https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat-square" alt="PHPStan"></a>
-  <a href="https://laravel.com/"><img src="https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel" alt="Laravel 11"></a>
-  <a href="https://vuejs.org/"><img src="https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat-square&logo=vuedotjs" alt="Vue 3"></a>
-</p>
-
 ---
 
 ## 🚀 Overview
