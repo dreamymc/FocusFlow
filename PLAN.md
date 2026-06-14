@@ -109,16 +109,16 @@
 > Channels are: `workspace.{id}` (private) and `task.{id}` (presence).
 
 ### Tasks:
-- [ ] `P3-01` Configure Laravel Reverb: `config/reverb.php`, `.env` Reverb keys
-- [ ] `P3-02` Events to broadcast: `TaskMoved`, `TaskAssigned`, `TaskCommented`
-- [ ] `P3-03` Implement `BroadcastServiceProvider` channel authorization
-- [ ] `P3-04` Private channel: `workspace.{workspaceId}` — members only
-- [ ] `P3-05` Presence channel: `task.{taskId}` — shows who's viewing a task
-- [ ] `P3-06` Fire `TaskMoved` event inside `MoveTaskAction` (not the controller)
-- [ ] `P3-07` Frontend: install `laravel-echo`, `pusher-js`, configure Echo with Reverb
-- [ ] `P3-08` Vue composable: `useTaskUpdates(taskId)` — subscribes to channel updates
-- [ ] `P3-09` Real-time notification bell component (Vue) consuming `workspace.{id}` channel
-- [ ] `P3-10` Feature tests: assert `Broadcasting::assertPushed(TaskMoved::class)` on task move
+- [x] `P3-01` Configure Laravel Reverb: `config/reverb.php`, `.env` Reverb keys
+- [x] `P3-02` Events to broadcast: `TaskMoved`, `TaskAssigned`, `TaskCommented`
+- [x] `P3-03` Implement `BroadcastServiceProvider` channel authorization
+- [x] `P3-04` Private channel: `workspace.{workspaceId}` — members only
+- [x] `P3-05` Presence channel: `task.{taskId}` — shows who's viewing a task
+- [x] `P3-06` Fire `TaskMoved` event inside `MoveTaskAction` (not the controller)
+- [x] `P3-07` Frontend: install `laravel-echo`, `pusher-js`, configure Echo with Reverb
+- [x] `P3-08` Vue composable: `useTaskUpdates(taskId)` — subscribes to channel updates
+- [x] `P3-09` Real-time notification bell component (Vue) consuming `workspace.{id}` channel
+- [x] `P3-10` Feature tests: assert `Broadcasting::assertPushed(TaskMoved::class)` on task move
 
 ### Parallel Opportunity:
 > After P3-01 and P3-02 are committed:
