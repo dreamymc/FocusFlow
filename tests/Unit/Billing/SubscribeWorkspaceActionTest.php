@@ -6,8 +6,8 @@ use App\Actions\SubscribeWorkspaceAction;
 it('subscribes a workspace to a plan', function () {
     $action = app(SubscribeWorkspaceAction::class);
     
-    $subscriptionMock = Mockery::mock();
-    $subscriptionMock->shouldReceive('create')
+    $builderMock = Mockery::mock(\Laravel\Cashier\SubscriptionBuilder::class);
+    $builderMock->shouldReceive('create')
         ->with('pm_123')
         ->once()
         ->andReturn(Mockery::mock(\Laravel\Cashier\Subscription::class, function ($mock) {
@@ -18,7 +18,7 @@ it('subscribes a workspace to a plan', function () {
     $workspaceMock->shouldReceive('newSubscription')
         ->with('default', 'price_pro')
         ->once()
-        ->andReturn($subscriptionMock);
+        ->andReturn($builderMock);
 
     // Execute the action with mocked workspace
     $result = $action->execute($workspaceMock, 'pm_123', 'price_pro');

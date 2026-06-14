@@ -25,7 +25,7 @@ class TaskFactory extends Factory
             'title' => fake()->sentence(),
             'description' => fake()->paragraph(),
             'status' => \App\Enums\TaskStatus::Backlog->value,
-            'due_date' => fake()->dateTimeBetween('now', '+1 month'),
+            'priority' => 'medium',
         ];
     }
 }
