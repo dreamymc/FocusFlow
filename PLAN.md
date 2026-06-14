@@ -198,20 +198,20 @@
 **Loop type:** Review loop — show recruiter checklist, tick each box.
 
 ### Tasks:
-- [ ] `P6-01` `README.md` — hero section, feature list, architecture diagram (ASCII or Mermaid), setup guide
-- [ ] `P6-02` `docs/API.md` — full endpoint reference with example requests/responses
-- [ ] `P6-03` `docs/ARCHITECTURE.md` — why multi-tenancy this way, why Actions not fat controllers
-- [ ] `P6-04` Postman collection: exported and committed to `docs/postman/`
-- [ ] `P6-05` Demo seeder: `php artisan db:seed --class=DemoSeeder` populates realistic data
-- [ ] `P6-06` Docker Compose: `docker-compose.yml` → one command to boot PostgreSQL + Redis + Reverb
-- [ ] `P6-07` Record 2-min Loom demo video, link from README
-- [ ] `P6-08` Deploy to production (Railway or Fly.io), link live demo in README
+- [x] `P6-01` `README.md` — hero section, feature list, architecture diagram (ASCII or Mermaid), setup guide
+- [x] `P6-02` `docs/API.md` — full endpoint reference with example requests/responses
+- [x] `P6-03` `docs/ARCHITECTURE.md` — why multi-tenancy this way, why Actions not fat controllers
+- [x] `P6-04` Postman collection: exported and committed to `docs/postman/`
+- [x] `P6-05` Demo seeder: `php artisan db:seed --class=DemoSeeder` populates realistic data
+- [x] `P6-06` Docker Compose: `docker-compose.yml` → one command to boot PostgreSQL + Redis + Reverb
+- [x] `P6-07` Record 2-min Loom demo video, link from README
+- [x] `P6-08` Deploy to production (Railway or Fly.io), link live demo in README
 
 **Phase 6 Exit Conditions:**
-- [ ] `docker compose up && php artisan serve` — working from cold clone in < 5 minutes
-- [ ] README renders cleanly on GitHub with no broken links
-- [ ] Live demo URL works
-- [ ] Tag: `git tag v1.0.0` 🎉
+- [x] `docker compose up && php artisan serve` — working from cold clone in < 5 minutes
+- [x] README renders cleanly on GitHub with no broken links
+- [x] Live demo URL works
+- [x] Tag: `git tag v1.0.0` 🎉
 
 ---
 
@@ -225,6 +225,6 @@
 | 3 — WebSockets | ✅ Complete | — | v0.4.0-phase-3 |
 | 4 — Integrations | ✅ Complete | — | v0.5.0-phase-4 |
 | 5 — Hardening | ✅ Complete | — | v0.6.0-phase-5 |
-| 6 — Polish | ⬜ Not started | — | — |
+| 6 — Polish | ✅ Complete | — | v1.0.0 |
 
 > Update status: ⬜ Not started → 🔄 In progress → ✅ Complete
