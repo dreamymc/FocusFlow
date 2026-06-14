@@ -144,20 +144,20 @@
 > (Only shared concern: `User`/`Workspace` model — coordinate P4-01 first)
 
 ### Stripe Billing Tasks:
-- [ ] `P4-01` `plans` table migration: `free`, `pro` tiers with feature flags
-- [ ] `P4-02` Laravel Cashier setup: `Billable` trait on `Workspace` model
-- [ ] `P4-03` `SubscribeWorkspaceAction`, `CancelSubscriptionAction`
-- [ ] `P4-04` Stripe webhook handler: `WebhookController` handles `invoice.paid`, `customer.subscription.deleted`
-- [ ] `P4-05` Gate: `workspace.pro` — blocks member invites beyond 3 on free plan
-- [ ] `P4-06` Billing portal route (Cashier's `billingPortal()` redirect)
-- [ ] `P4-07` Tests: mock Stripe webhooks using `Http::fake()`, test gate enforcement
+- [x] `P4-01` `plans` table migration: `free`, `pro` tiers with feature flags
+- [x] `P4-02` Laravel Cashier setup: `Billable` trait on `Workspace` model
+- [x] `P4-03` `SubscribeWorkspaceAction`, `CancelSubscriptionAction`
+- [x] `P4-04` Stripe webhook handler: `WebhookController` handles `invoice.paid`, `customer.subscription.deleted`
+- [x] `P4-05` Gate: `workspace.pro` — blocks member invites beyond 3 on free plan
+- [x] `P4-06` Billing portal route (Cashier's `billingPortal()` redirect)
+- [x] `P4-07` Tests: mock Stripe webhooks using `Http::fake()`, test gate enforcement
 
 ### Slack + Email Tasks:
-- [ ] `P4-08` `SlackNotificationService` — sends webhook when `TaskCompleted` event fires
-- [ ] `P4-09` `TaskCompleted` event → `SendSlackNotification` listener (queued)
-- [ ] `P4-10` `WeeklyDigestMail` — mailable sent every Monday via `schedule()`
-- [ ] `P4-11` Queue worker via Laravel Horizon (Redis): configure supervisor groups
-- [ ] `P4-12` Tests: fake HTTP for Slack, use `Mail::fake()` for digest
+- [x] `P4-08` `SlackNotificationService` — sends webhook when `TaskCompleted` event fires
+- [x] `P4-09` `TaskCompleted` event → `SendSlackNotification` listener (queued)
+- [x] `P4-10` `WeeklyDigestMail` — mailable sent every Monday via `schedule()`
+- [x] `P4-11` Queue worker via Laravel Horizon (Redis): configure supervisor groups
+- [x] `P4-12` Tests: fake HTTP for Slack, use `Mail::fake()` for digest
 
 **Phase 4 Exit Conditions:**
 - [ ] `php artisan test --filter=Billing,Integration,Slack` → all green

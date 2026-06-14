@@ -5,9 +5,8 @@ use App\Models\Workspace;
 use App\Enums\WorkspaceRole;
 
 it('returns a billing portal url', function () {
-    $workspace = Workspace::factory()->create(['stripe_id' => 'cus_123']);
-    $user = User::factory()->create();
-    $workspace->users()->attach($user, ['role' => WorkspaceRole::Admin->value]);
+    [$workspace, $user] = createWorkspaceWithUser(WorkspaceRole::Admin);
+    $workspace->update(['stripe_id' => 'cus_123']);
 
     // Partial mock to bypass actual Stripe API call
     $workspaceMock = Mockery::mock($workspace)->makePartial();

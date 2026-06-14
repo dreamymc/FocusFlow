@@ -19,7 +19,7 @@ class MoveTaskAction
 
         event(new TaskMoved($task, $previousStatus));
 
-        if ($status === TaskStatus::Done) {
+        if ($status === TaskStatus::Done && $previousStatus !== TaskStatus::Done) {
             event(new TaskCompleted($task));
         }
 

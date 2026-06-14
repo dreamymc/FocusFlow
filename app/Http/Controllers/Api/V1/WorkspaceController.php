@@ -34,6 +34,10 @@ class WorkspaceController extends Controller
 
     public function billingPortal(Request $request, Workspace $workspace): \Illuminate\Http\JsonResponse
     {
+        if (!$request->user()->hasRole('admin')) {
+            abort(403, 'Only workspace admins can access the billing portal.');
+        }
+
         return response()->json([
             'data' => [
                 'url' => $workspace->billingPortalUrl(url('/'))
