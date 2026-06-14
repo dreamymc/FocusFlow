@@ -173,22 +173,22 @@
 **Loop type:** Coverage loop — run Pest with `--coverage`, add tests until ≥80%.
 
 ### Tasks:
-- [ ] `P5-01` Add missing unit tests: all Action classes, all Service classes
-- [ ] `P5-02` Add missing feature tests: role authorization matrix (all roles × all endpoints)
-- [ ] `P5-03` Add missing tests: WebSocket channel auth (unauthorized user denied)
-- [ ] `P5-04` `Handler.php` — custom JSON error responses (no HTML stack traces in API)
-- [ ] `P5-05` Throttle brute-force on `/api/v1/login`: 5 attempts / 60 seconds
-- [ ] `P5-06` SQL injection audit: confirm all queries use Eloquent or query builder bindings
-- [ ] `P5-07` Add `X-Content-Type-Options`, `X-Frame-Options` headers via middleware
-- [ ] `P5-08` Sanctum token expiry: tokens expire after 30 days (configurable)
-- [ ] `P5-09` Run `php artisan test --coverage` → must hit ≥80%
-- [ ] `P5-10` Fix all PHPStan level 5 violations: `./vendor/bin/phpstan analyse`
+- [x] `P5-01` Add missing unit tests: all Action classes, all Service classes
+- [x] `P5-02` Add missing feature tests: role authorization matrix (all roles × all endpoints)
+- [x] `P5-03` Add missing tests: WebSocket channel auth (unauthorized user denied)
+- [x] `P5-04` `Handler.php` — custom JSON error responses (no HTML stack traces in API)
+- [x] `P5-05` Throttle brute-force on `/api/v1/login`: 5 attempts / 60 seconds
+- [x] `P5-06` SQL injection audit: confirm all queries use Eloquent or query builder bindings
+- [x] `P5-07` Add `X-Content-Type-Options`, `X-Frame-Options` headers via middleware
+- [x] `P5-08` Sanctum token expiry: tokens expire after 30 days (configurable)
+- [x] `P5-09` Run `php artisan test --coverage` → must hit ≥80%
+- [x] `P5-10` Fix all PHPStan level 5 violations: `./vendor/bin/phpstan analyse`
 
 **Phase 5 Exit Conditions:**
-- [ ] Test coverage ≥ 80%
-- [ ] PHPStan level 5: no errors
-- [ ] `security-auditor` sign-off
-- [ ] Tag: `git tag v0.6.0-phase-5`
+- [x] Test coverage ≥ 80%
+- [x] PHPStan level 5: no errors
+- [x] `security-auditor` sign-off
+- [x] Tag: `git tag v0.6.0-phase-5`
 
 ---
 
@@ -224,7 +224,7 @@
 | 2 — API | ✅ Complete | — | v0.3.0-phase-2 |
 | 3 — WebSockets | ✅ Complete | — | v0.4.0-phase-3 |
 | 4 — Integrations | ✅ Complete | — | v0.5.0-phase-4 |
-| 5 — Hardening | 🔄 In progress | — | — |
+| 5 — Hardening | ✅ Complete | — | v0.6.0-phase-5 |
 | 6 — Polish | ⬜ Not started | — | — |
 
 > Update status: ⬜ Not started → 🔄 In progress → ✅ Complete
