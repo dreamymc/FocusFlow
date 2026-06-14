@@ -13,7 +13,7 @@ class StoreInvitationRequest extends FormRequest
         $workspace = $this->route('workspace');
         $pivot = $this->user()->workspaces()->where('workspaces.id', $workspace->id)->first()?->pivot;
         
-        return $pivot && $pivot->role === WorkspaceRole::Admin->value;
+        return $pivot && $pivot->getAttribute('role') === WorkspaceRole::Admin->value;
     }
 
     public function rules(): array

@@ -23,6 +23,7 @@ class AcceptInviteAction
             abort(403, 'This invitation was sent to a different email address.');
         }
 
+        /** @var Workspace $workspace */
         $workspace = $invitation->workspace;
 
         $workspace->users()->syncWithoutDetaching([
