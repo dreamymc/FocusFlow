@@ -6,7 +6,7 @@ use App\Actions\CancelSubscriptionAction;
 it('cancels a workspace subscription', function () {
     $action = app(CancelSubscriptionAction::class);
     
-    $subscriptionMock = Mockery::mock();
+    $subscriptionMock = Mockery::mock(\Laravel\Cashier\Subscription::class);
     $subscriptionMock->shouldReceive('cancel')->once()->andReturnTrue();
 
     $workspaceMock = Mockery::mock(Workspace::class)->makePartial();

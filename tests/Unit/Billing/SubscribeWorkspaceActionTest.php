@@ -10,7 +10,9 @@ it('subscribes a workspace to a plan', function () {
     $subscriptionMock->shouldReceive('create')
         ->with('pm_123')
         ->once()
-        ->andReturn((object)['stripe_id' => 'sub_123']);
+        ->andReturn(Mockery::mock(\Laravel\Cashier\Subscription::class, function ($mock) {
+            $mock->stripe_id = 'sub_123';
+        }));
     
     $workspaceMock = Mockery::mock(Workspace::class)->makePartial();
     $workspaceMock->shouldReceive('newSubscription')

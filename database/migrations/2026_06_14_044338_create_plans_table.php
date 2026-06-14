@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->string('stripe_price_id')->nullable();
+            $table->json('features')->nullable();
             $table->timestamps();
         });
 
         \Illuminate\Support\Facades\DB::table('plans')->insert([
-            ['name' => 'free', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'pro', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Free', 'slug' => 'free', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Pro', 'slug' => 'pro', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 
