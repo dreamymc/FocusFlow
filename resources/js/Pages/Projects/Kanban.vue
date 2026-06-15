@@ -235,88 +235,90 @@ const handleTaskDeleted = (taskId) => {
 
 <template>
   <AuthenticatedLayout :title="project.name">
-    <div class="space-y-6 flex flex-col h-full">
-      <!-- Sub-header bar -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <!-- Breadcrumbs -->
-          <div class="flex items-center gap-2 text-xs text-text-secondary font-medium mb-1">
-            <Link :href="`/workspaces/${workspace.id}/projects`" class="hover:text-primary transition-colors">
-              Projects
-            </Link>
-            <span class="text-text-muted">/</span>
-            <span class="text-text-muted font-normal">{{ project.name }}</span>
-          </div>
-
-          <!-- Title header -->
-          <div class="flex items-center gap-3">
-            <ColorIcon :name="project.name" :id="project.id" size="lg" />
-            <h1 class="font-display text-2xl font-bold text-text">{{ project.name }}</h1>
-          </div>
-        </div>
-
-        <!-- Create Task shortcut (Members+) -->
-        <div v-if="isMember && !isViewer">
-          <button
-            @click="openCreateTaskModal('backlog')"
-            class="inline-flex items-center justify-center rounded-md bg-primary hover:bg-primary-dark text-white px-4 py-2 text-sm font-medium transition-colors shadow-sm gap-1 cursor-pointer"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            New Task
-          </button>
-        </div>
-      </div>
-
-      <!-- Kanban Board Container -->
-      <div class="flex-1 min-h-0">
-        <!-- Skeleton state -->
-        <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-pulse h-[60vh]">
-          <div v-for="i in 4" :key="i" class="bg-surface border border-border rounded-xl p-4 flex flex-col h-full space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="h-4 bg-slate-200 rounded w-1/2"></div>
-              <div class="w-6 h-6 bg-slate-200 rounded-full"></div>
+    <div class="h-full flex flex-col">
+      <div class="space-y-6 flex flex-col h-full">
+        <!-- Sub-header bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <!-- Breadcrumbs -->
+            <div class="flex items-center gap-2 text-xs text-text-secondary font-medium mb-1">
+              <Link :href="`/workspaces/${workspace.id}/projects`" class="hover:text-primary transition-colors">
+                Projects
+              </Link>
+              <span class="text-text-muted">/</span>
+              <span class="text-text-muted font-normal">{{ project.name }}</span>
             </div>
-            <div class="space-y-3 flex-1">
-              <div v-for="j in 2" :key="j" class="bg-slate-100 p-4 rounded-lg space-y-3 border border-border/50">
-                <div class="h-4 bg-slate-200 rounded w-3/4"></div>
-                <div class="h-3 bg-slate-200 rounded w-1/2"></div>
-                <div class="flex items-center justify-between pt-2">
-                  <div class="w-12 h-5 bg-slate-200 rounded-full"></div>
-                  <div class="w-6 h-6 bg-slate-200 rounded-full"></div>
+
+            <!-- Title header -->
+            <div class="flex items-center gap-3">
+              <ColorIcon :name="project.name" :id="project.id" size="lg" />
+              <h1 class="font-display text-2xl font-bold text-text">{{ project.name }}</h1>
+            </div>
+          </div>
+
+          <!-- Create Task shortcut (Members+) -->
+          <div v-if="isMember && !isViewer">
+            <button
+              @click="openCreateTaskModal('backlog')"
+              class="inline-flex items-center justify-center rounded-md bg-primary hover:bg-primary-dark text-white px-4 py-2 text-sm font-medium transition-colors shadow-sm gap-1 cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              New Task
+            </button>
+          </div>
+        </div>
+
+        <!-- Kanban Board Container -->
+        <div class="flex-1 min-h-0">
+          <!-- Skeleton state -->
+          <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-pulse h-[60vh]">
+            <div v-for="i in 4" :key="i" class="bg-surface border border-border rounded-xl p-4 flex flex-col h-full space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+                <div class="w-6 h-6 bg-slate-200 rounded-full"></div>
+              </div>
+              <div class="space-y-3 flex-1">
+                <div v-for="j in 2" :key="j" class="bg-slate-100 p-4 rounded-lg space-y-3 border border-border/50">
+                  <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                  <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+                  <div class="flex items-center justify-between pt-2">
+                    <div class="w-12 h-5 bg-slate-200 rounded-full"></div>
+                    <div class="w-6 h-6 bg-slate-200 rounded-full"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <KanbanBoard
+            v-else
+            :columns="localColumns"
+            :members="members"
+            :read-only="isViewer"
+            :workspace-id="workspace.id"
+            @task-selected="openTaskModal"
+            @create-task="openCreateTaskModal"
+            @task-moved="handleTaskMoved"
+          />
         </div>
-
-        <KanbanBoard
-          v-else
-          :columns="localColumns"
-          :members="members"
-          :read-only="isViewer"
-          :workspace-id="workspace.id"
-          @task-selected="openTaskModal"
-          @create-task="openCreateTaskModal"
-          @task-moved="handleTaskMoved"
-        />
       </div>
-    </div>
 
-    <!-- Task Details & Creation Modal -->
-    <TaskModal
-      :open="showTaskModal"
-      :task="selectedTask"
-      :project-id="project.id"
-      :workspace-id="workspace.id"
-      :mode="taskModalMode"
-      :initial-status="createTaskStatus"
-      :members="members"
-      @close="showTaskModal = false"
-      @task-created="handleTaskCreated"
-      @task-updated="handleTaskUpdated"
-      @task-deleted="handleTaskDeleted"
-    />
+      <!-- Task Details & Creation Modal -->
+      <TaskModal
+        :open="showTaskModal"
+        :task="selectedTask"
+        :project-id="project.id"
+        :workspace-id="workspace.id"
+        :mode="taskModalMode"
+        :initial-status="createTaskStatus"
+        :members="members"
+        @close="showTaskModal = false"
+        @task-created="handleTaskCreated"
+        @task-updated="handleTaskUpdated"
+        @task-deleted="handleTaskDeleted"
+      />
+    </div>
   </AuthenticatedLayout>
 </template>
