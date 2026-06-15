@@ -32,6 +32,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/workspaces/{workspace}/settings', [\App\Http\Controllers\Web\WorkspaceController::class, 'settings'])->name('workspaces.settings');
         Route::put('/workspaces/{workspace}', [\App\Http\Controllers\Web\WorkspaceController::class, 'update'])->name('workspaces.update');
         Route::post('/workspaces/{workspace}/invite', [\App\Http\Controllers\Web\WorkspaceController::class, 'invite'])->name('workspaces.invite');
+
+        Route::get('/workspaces/{workspace}/projects', [\App\Http\Controllers\Web\ProjectController::class, 'index'])->name('workspaces.projects.index');
+        Route::post('/workspaces/{workspace}/projects', [\App\Http\Controllers\Web\ProjectController::class, 'store'])->name('workspaces.projects.store');
     });
 });
 

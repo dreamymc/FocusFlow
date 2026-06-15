@@ -135,7 +135,7 @@ const isActive = (path) => {
           <span class="text-[11px] font-bold text-text-muted tracking-wider uppercase font-sans">Projects</span>
           <Link
             v-if="can('manage-projects')"
-            :href="`/workspaces/${currentWorkspace.id}/projects/create`"
+            :href="`/workspaces/${currentWorkspace.id}/projects`"
             class="p-0.5 rounded hover:bg-primary-light text-text-secondary hover:text-primary transition-colors cursor-pointer"
             title="New Project"
           >
