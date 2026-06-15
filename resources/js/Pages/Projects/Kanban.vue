@@ -111,7 +111,11 @@ const handleTaskAssignedEvent = (e) => {
 };
 
 const handleTaskCommentedEvent = (e) => {
-  toast.info(`New comment on "${e.task.title}": "${e.comment}"`);
+  toast.info(`New comment on "${e.task.title}": "${e.comment.content}"`);
+};
+
+const handleTaskUpdatedEvent = (e) => {
+  handleTaskUpdated(e.task);
 };
 
 const isLoading = ref(true);
@@ -126,6 +130,7 @@ onMounted(() => {
     workspaceChannel.value.listen('TaskMoved', handleTaskMovedEvent);
     workspaceChannel.value.listen('TaskAssigned', handleTaskAssignedEvent);
     workspaceChannel.value.listen('TaskCommented', handleTaskCommentedEvent);
+    workspaceChannel.value.listen('TaskUpdated', handleTaskUpdatedEvent);
   }
 });
 
@@ -135,6 +140,7 @@ onUnmounted(() => {
     workspaceChannel.value?.stopListening('TaskMoved', handleTaskMovedEvent);
     workspaceChannel.value?.stopListening('TaskAssigned', handleTaskAssignedEvent);
     workspaceChannel.value?.stopListening('TaskCommented', handleTaskCommentedEvent);
+    workspaceChannel.value?.stopListening('TaskUpdated', handleTaskUpdatedEvent);
     // Use the documented Echo.leave() API (not channel-object .leave()) to
     // correctly free the Pusher subscription and server-side presence resources.
     window.Echo.leave('workspace.' + props.workspace.id);

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\WorkspaceController;
 use App\Http\Controllers\Api\V1\InvitationController;
 use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\TaskController;
+use App\Http\Controllers\Api\V1\CommentController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('api.v1.')->group(function () {
@@ -32,6 +33,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
                 Route::get('/billing-portal', [WorkspaceController::class, 'billingPortal'])->name('workspaces.billing-portal');
                 Route::apiResource('projects', ProjectController::class);
                 Route::apiResource('projects.tasks', TaskController::class);
+                Route::apiResource('projects.tasks.comments', CommentController::class)->only(['index', 'store']);
                 Route::put('tasks/{task}/move', [TaskController::class, 'move'])->name('tasks.move');
             });
     });

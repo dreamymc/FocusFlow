@@ -21,6 +21,7 @@ class TaskMoved implements ShouldBroadcast
      */
     public function __construct(public Task $task, public TaskStatus $previousStatus)
     {
+        $this->task->load(['assignees', 'labels']);
     }
 
     /**

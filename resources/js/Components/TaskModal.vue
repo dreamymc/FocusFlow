@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onUnmounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { toast } from 'vue-sonner';
 import {
@@ -55,6 +55,64 @@ const currentUserId = computed(() => page.props.auth?.user?.id);
 const isSaving = ref(false);
 const saveStatus = ref(''); // '', 'saving', 'saved', 'error'
 const showDeleteConfirm = ref(false);
+
+// Comments state
+const comments = ref([]);
+const newComment = ref('');
+const isSubmittingComment = ref(false);
+const commentsLoading = ref(false);
+
+const getInitials = (name) => {
+  if (!name) return '?';
+  return name.trim().split(/\s+/).map(n => n[0]).slice(0, 2).join('').toUpperCase();
+};
+
+const fetchComments = async () => {
+  if (!props.task) return;
+  commentsLoading.value = true;
+  try {
+    const response = await fetch(`/api/v1/workspaces/${props.workspaceId}/projects/${props.projectId}/tasks/${props.task.id}/comments`);
+    if (response.ok) {
+      const result = await response.json();
+      comments.value = result.data;
+    }
+  } catch (e) {
+    console.error("Failed to load comments");
+  } finally {
+    commentsLoading.value = false;
+  }
+};
+
+let modalChannel = null;
+
+const setupEchoListener = () => {
+  if (window.Echo && props.task) {
+    // Leave previous channel if any
+    if (modalChannel) {
+      window.Echo.leaveChannel('workspace.' + props.workspaceId);
+    }
+    
+    modalChannel = window.Echo.private('workspace.' + props.workspaceId);
+    modalChannel.listen('TaskCommented', (e) => {
+      if (e.task.id === props.task.id) {
+        if (!comments.value.some(c => c.id === e.comment.id)) {
+          comments.value.push(e.comment);
+        }
+      }
+    });
+  }
+};
+
+const cleanupEchoListener = () => {
+  if (modalChannel && window.Echo) {
+    modalChannel.stopListening('TaskCommented');
+    modalChannel = null;
+  }
+};
+
+onUnmounted(() => {
+  cleanupEchoListener();
+});
 
 const getCookie = (name) => {
   if (typeof document === 'undefined') return null;
@@ -130,6 +188,13 @@ watch(() => [props.task?.id, props.open], () => {
 
   if (taskChanged || !isFormDirty.value) {
     initForms();
+  }
+
+  if (props.open && props.task && props.mode === 'view') {
+    fetchComments();
+    setupEchoListener();
+  } else {
+    cleanupEchoListener();
   }
 }, { immediate: true });
 
@@ -249,6 +314,44 @@ const submitDelete = async () => {
     toast.error('Failed to delete task.');
   } finally {
     isSaving.value = false;
+  }
+};
+
+const submitComment = async () => {
+  if (!newComment.value.trim() || isSubmittingComment.value || !props.task) return;
+  isSubmittingComment.value = true;
+  try {
+    const xsrf = getCookie('XSRF-TOKEN');
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    if (xsrf) {
+      headers['X-XSRF-TOKEN'] = xsrf;
+    }
+
+    const response = await fetch(`/api/v1/workspaces/${props.workspaceId}/projects/${props.projectId}/tasks/${props.task.id}/comments`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        content: newComment.value,
+      }),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      if (!comments.value.some(c => c.id === result.data.id)) {
+        comments.value.push(result.data);
+      }
+      newComment.value = '';
+      toast.success('Comment posted successfully!');
+    } else {
+      throw new Error();
+    }
+  } catch (error) {
+    toast.error('Failed to post comment.');
+  } finally {
+    isSubmittingComment.value = false;
   }
 };
 </script>
@@ -399,15 +502,62 @@ const submitDelete = async () => {
         <!-- Two Column Layout -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-border/40">
           
-          <!-- Left Column (Description) -->
-          <div class="md:col-span-2 space-y-2">
-            <label class="text-xs font-semibold text-text-secondary uppercase tracking-wider font-mono">Description</label>
-            <textarea
-              v-model="editForm.description"
-              class="block w-full rounded-md border border-transparent hover:border-border/60 focus:border-border bg-transparent focus:bg-surface p-2 text-sm text-text h-40 resize-none focus:outline-none transition-all"
-              placeholder="Add a detailed description for this task..."
-              :disabled="readOnly"
-            />
+          <!-- Left Column (Description & Comments) -->
+          <div class="md:col-span-2 space-y-6">
+            <!-- Description -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-text-secondary uppercase tracking-wider font-mono">Description</label>
+              <textarea
+                v-model="editForm.description"
+                class="block w-full rounded-md border border-transparent hover:border-border/60 focus:border-border bg-transparent focus:bg-surface p-2 text-sm text-text h-40 resize-none focus:outline-none transition-all"
+                placeholder="Add a detailed description for this task..."
+                :disabled="readOnly"
+              />
+            </div>
+
+            <!-- Comments Section -->
+            <div class="space-y-4 pt-6 border-t border-border/40">
+              <h4 class="text-sm font-semibold text-text font-display">Comments</h4>
+              
+              <!-- Comment List -->
+              <div v-if="comments.length > 0" class="space-y-4 max-h-[250px] overflow-y-auto pr-1">
+                <div v-for="comment in comments" :key="comment.id" class="flex gap-3 text-sm">
+                  <!-- User Avatar/Initials -->
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold text-xs border border-primary/20 select-none">
+                    {{ getInitials(comment.user?.name) }}
+                  </div>
+                  <!-- Content & Time -->
+                  <div class="flex-1 space-y-1 bg-surface-2 p-3 rounded-lg border border-border">
+                    <div class="flex items-center justify-between">
+                      <span class="font-medium text-text text-xs">{{ comment.user?.name || 'Unknown User' }}</span>
+                      <span class="text-[10px] text-text-muted font-mono">{{ new Date(comment.created_at).toLocaleString() }}</span>
+                    </div>
+                    <p class="text-text-secondary whitespace-pre-line text-xs">{{ comment.content }}</p>
+                  </div>
+                </div>
+              </div>
+              <div v-else-if="commentsLoading" class="text-xs text-text-muted py-2">Loading comments...</div>
+              <div v-else class="text-xs text-text-muted py-2 italic">No comments yet. Be the first to start the conversation!</div>
+
+              <!-- Add Comment Form -->
+              <form @submit.prevent="submitComment" class="flex gap-2 items-start pt-2">
+                <textarea
+                  v-model="newComment"
+                  class="block w-full rounded-md border border-border px-3 py-2 bg-surface text-xs text-text shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none h-14 resize-none"
+                  placeholder="Write a comment..."
+                  required
+                  :disabled="isSubmittingComment"
+                />
+                <button
+                  type="submit"
+                  class="flex-shrink-0 inline-flex items-center justify-center rounded-md bg-primary hover:bg-primary-dark text-white px-3 py-2 text-xs font-medium transition-colors shadow-sm cursor-pointer disabled:opacity-50 h-14"
+                  :disabled="isSubmittingComment || !newComment.trim()"
+                >
+                  <span v-if="isSubmittingComment">...</span>
+                  <span v-else>Post</span>
+                </button>
+              </form>
+            </div>
           </div>
 
           <!-- Right Column (Metadata Selectors) -->

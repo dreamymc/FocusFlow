@@ -81,4 +81,12 @@ class Task extends Model
         $value = $status instanceof TaskStatus ? $status->value : $status;
         return $query->where('status', $value);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Comment, $this>
+     */
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class)->orderBy('created_at', 'asc');
+    }
 }

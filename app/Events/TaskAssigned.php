@@ -22,6 +22,7 @@ class TaskAssigned implements ShouldBroadcast
      */
     public function __construct(public Task $task, public User $user)
     {
+        $this->task->load(['assignees', 'labels']);
     }
 
     /**
