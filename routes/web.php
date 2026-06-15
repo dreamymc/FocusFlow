@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Laravel\Cashier\Http\Middleware\VerifyWebhookSignature;
+use App\Http\Controllers\Webhooks\StripeController;
 
-Route::get('/', function () {
-    \Illuminate\Support\Facades\Auth::login(\App\Models\User::first());
-    return view('welcome');
-});
+// Stripe webhook — must be BEFORE auth middleware
+Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])
+    ->middleware(VerifyWebhookSignature::class);
 
-Route::post('/stripe/webhook', [\App\Http\Controllers\Webhooks\StripeController::class, 'handleWebhook'])
-    ->middleware(\Laravel\Cashier\Http\Middleware\VerifyWebhookSignature::class);
+// Auth routes (Phase 1)
+// App routes (Phase 2+)
