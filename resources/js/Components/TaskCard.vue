@@ -12,6 +12,35 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['task-clicked']);
+
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+
+const onMouseDown = (e) => {
+  isDragging = false;
+  startX = e.clientX;
+  startY = e.clientY;
+};
+
+const onMouseUp = (e) => {
+  const diffX = Math.abs(e.clientX - startX);
+  const diffY = Math.abs(e.clientY - startY);
+  if (diffX > 5 || diffY > 5) {
+    isDragging = true;
+  }
+};
+
+const onClick = (e) => {
+  if (isDragging) {
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+  }
+  emit('task-clicked', props.task.id);
+};
+
 const firstAssignee = computed(() => {
   return props.task.assignees && props.task.assignees.length > 0
     ? props.task.assignees[0]
@@ -47,6 +76,9 @@ const priorityLabel = computed(() => {
         ? 'cursor-default'
         : 'cursor-grab active:cursor-grabbing hover:shadow-md hover:translate-y-[-1px] hover:border-border-strong'
     ]"
+    @mousedown="onMouseDown"
+    @mouseup="onMouseUp"
+    @click="onClick"
   >
     <!-- Top row: Priority dot & Title -->
     <div class="flex items-start justify-between gap-2">

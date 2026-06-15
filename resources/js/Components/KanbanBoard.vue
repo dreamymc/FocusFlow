@@ -22,7 +22,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['task-selected', 'create-task']);
+const emit = defineEmits(['task-selected', 'create-task', 'task-moved']);
 
 const localColumns = ref(JSON.parse(JSON.stringify(props.columns)));
 
@@ -57,6 +57,9 @@ const handleTaskMoved = async ({ taskId, fromColumn, toColumn, newIndex, oldInde
   task.status = toColumn;
   targetCol.tasks.splice(newIndex, 0, task);
 
+  // Notify parent of move
+  emit('task-moved', { taskId, fromColumn, toColumn, newIndex, oldIndex });
+
   // Send request
   try {
     const xsrf = getCookie('XSRF-TOKEN');
@@ -80,6 +83,7 @@ const handleTaskMoved = async ({ taskId, fromColumn, toColumn, newIndex, oldInde
   } catch (error) {
     // Revert state
     localColumns.value = backup;
+    emit('task-moved', { taskId, fromColumn: toColumn, toColumn: fromColumn, newIndex: oldIndex, oldIndex: newIndex });
     toast.error('Failed to move task. Reverted changes.');
   }
 };

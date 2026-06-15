@@ -72,9 +72,13 @@ const onDragEnd = (event) => {
         v-for="task in localTasks"
         :key="task.id"
         :data-task-id="task.id"
-        @click="emit('task-selected', task.id)"
       >
-        <TaskCard :task="task" :read-only="readOnly" class="mb-2" />
+        <TaskCard
+          :task="task"
+          :read-only="readOnly"
+          class="mb-2"
+          @task-clicked="taskId => emit('task-selected', taskId)"
+        />
       </div>
 
       <!-- Empty State inside Column -->

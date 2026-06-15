@@ -1,11 +1,12 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { toast } from 'vue-sonner';
 import { usePermissions } from '../../Composables/usePermissions';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout.vue';
 import ColorIcon from '../../Components/ColorIcon.vue';
 import KanbanBoard from '../../Components/KanbanBoard.vue';
+import TaskModal from '../../Components/TaskModal.vue';
 
 const props = defineProps({
   project: {
@@ -28,14 +29,101 @@ const props = defineProps({
 
 const { isViewer, isMember } = usePermissions();
 
+const localColumns = ref(JSON.parse(JSON.stringify(props.columns)));
+
+watch(() => props.columns, (newVal) => {
+  localColumns.value = JSON.parse(JSON.stringify(newVal));
+}, { deep: true });
+
+// State for Task Modal
+const showTaskModal = ref(false);
+const selectedTask = ref(null);
+const taskModalMode = ref('view');
+const createTaskStatus = ref('backlog');
+
 const openTaskModal = (taskId) => {
-  console.log('Open task modal for ID:', taskId);
-  toast.info('Task details modal will be available in Phase 6.');
+  let foundTask = null;
+  for (const column of localColumns.value) {
+    foundTask = column.tasks.find(t => t.id === taskId);
+    if (foundTask) break;
+  }
+  if (foundTask) {
+    selectedTask.value = foundTask;
+    taskModalMode.value = 'view';
+    showTaskModal.value = true;
+  }
 };
 
 const openCreateTaskModal = (status) => {
-  console.log('Open create task modal for status:', status);
-  toast.info(`Task creation form for status "${status}" will be available in Phase 6.`);
+  createTaskStatus.value = status || 'backlog';
+  selectedTask.value = null;
+  taskModalMode.value = 'create';
+  showTaskModal.value = true;
+};
+
+const handleTaskMoved = ({ taskId, fromColumn, toColumn, newIndex, oldIndex }) => {
+  const sourceCol = localColumns.value.find(c => c.id === fromColumn);
+  const targetCol = localColumns.value.find(c => c.id === toColumn);
+  if (!sourceCol || !targetCol) return;
+  const taskIndex = sourceCol.tasks.findIndex(t => t.id === taskId);
+  if (taskIndex === -1) return;
+  const [task] = sourceCol.tasks.splice(taskIndex, 1);
+  task.status = toColumn;
+  targetCol.tasks.splice(newIndex, 0, task);
+};
+
+const handleTaskCreated = (newTask) => {
+  const status = typeof newTask.status === 'object' ? newTask.status.value : newTask.status;
+  const column = localColumns.value.find(c => c.id === status);
+  if (column) {
+    if (!column.tasks.some(t => t.id === newTask.id)) {
+      column.tasks.push(newTask);
+    }
+  }
+};
+
+const handleTaskUpdated = (updatedTask) => {
+  let foundColumn = null;
+  let taskIndex = -1;
+  
+  for (const col of localColumns.value) {
+    taskIndex = col.tasks.findIndex(t => t.id === updatedTask.id);
+    if (taskIndex !== -1) {
+      foundColumn = col;
+      break;
+    }
+  }
+
+  if (foundColumn && taskIndex !== -1) {
+    const currentStatus = typeof updatedTask.status === 'object' ? updatedTask.status.value : updatedTask.status;
+    if (foundColumn.id !== currentStatus) {
+      foundColumn.tasks.splice(taskIndex, 1);
+      const targetCol = localColumns.value.find(c => c.id === currentStatus);
+      if (targetCol) {
+        targetCol.tasks.push(updatedTask);
+      }
+    } else {
+      foundColumn.tasks[taskIndex] = updatedTask;
+    }
+  }
+  
+  if (selectedTask.value && selectedTask.value.id === updatedTask.id) {
+    selectedTask.value = updatedTask;
+  }
+};
+
+const handleTaskDeleted = (taskId) => {
+  for (const col of localColumns.value) {
+    const idx = col.tasks.findIndex(t => t.id === taskId);
+    if (idx !== -1) {
+      col.tasks.splice(idx, 1);
+      break;
+    }
+  }
+  if (selectedTask.value && selectedTask.value.id === taskId) {
+    selectedTask.value = null;
+    showTaskModal.value = false;
+  }
 };
 </script>
 
@@ -78,14 +166,30 @@ const openCreateTaskModal = (status) => {
       <!-- Kanban Board Container -->
       <div class="flex-1 min-h-0">
         <KanbanBoard
-          :columns="columns"
+          :columns="localColumns"
           :members="members"
           :read-only="isViewer"
           :workspace-id="workspace.id"
           @task-selected="openTaskModal"
           @create-task="openCreateTaskModal"
+          @task-moved="handleTaskMoved"
         />
       </div>
     </div>
+
+    <!-- Task Details & Creation Modal -->
+    <TaskModal
+      :open="showTaskModal"
+      :task="selectedTask"
+      :project-id="project.id"
+      :workspace-id="workspace.id"
+      :mode="taskModalMode"
+      :initial-status="createTaskStatus"
+      :members="members"
+      @close="showTaskModal = false"
+      @task-created="handleTaskCreated"
+      @task-updated="handleTaskUpdated"
+      @task-deleted="handleTaskDeleted"
+    />
   </AuthenticatedLayout>
 </template>
