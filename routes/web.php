@@ -23,5 +23,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LogoutController::class, 'destroy'])->name('logout');
     Route::post('/workspaces/switch', [WorkspaceSwitchController::class, 'store'])->name('workspaces.switch');
+    Route::get('/dashboard', [\App\Http\Controllers\Web\DashboardController::class, 'index'])->name('dashboard');
+});
+
+// Root redirect
+Route::get('/', function () {
+    return auth()->check() ? redirect('/dashboard') : redirect('/login');
 });
 
