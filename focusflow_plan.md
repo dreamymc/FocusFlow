@@ -1394,7 +1394,7 @@ ACCEPTANCE CRITERIA:
 | 5 | Kanban Board ⭐ (Drag-and-drop board) | ✅ Complete | `befa63d` → `6de7ebe` | `v0.5.0-frontend-phase-5` |
 | 6 | Task Detail (Modal, presence avatars) | ✅ Complete | — | `v0.6.0-frontend-phase-6` |
 | 7 | Real-Time Wiring (Live updates + toasts) | ✅ Complete | `93f334a` → `2357b87` | `v0.7.0-phase-7` |
-| 8 | Billing (Stripe portal + plan display) | 🔄 In progress | — | — |
+| 8 | Billing (Stripe portal + plan display) | ✅ Complete | `c8c20d5` | `v0.8.0-frontend-phase-8` |
 | 9 | Polish (Skeletons, mobile, transitions) | ⬜ Not started | — | — |
 
 > Update status: ⬜ Not started → 🔄 In progress → ✅ Complete

@@ -122,7 +122,8 @@ const isFormDirty = computed(() => {
 
 let lastTaskId = null;
 
-watch(() => [props.task, props.mode, props.open], () => {
+watch(() => [props.task?.id, props.open], () => {
+  // Reset forms only when the task changes or the modal is opened/closed
   const currentTaskId = props.task?.id || null;
   const taskChanged = currentTaskId !== lastTaskId;
   lastTaskId = currentTaskId;
@@ -130,7 +131,7 @@ watch(() => [props.task, props.mode, props.open], () => {
   if (taskChanged || !isFormDirty.value) {
     initForms();
   }
-}, { immediate: true, deep: true });
+}, { immediate: true });
 
 // Custom debounce implementation
 function debounce(fn, delay) {

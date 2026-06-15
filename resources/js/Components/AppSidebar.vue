@@ -19,6 +19,7 @@ const route = (name) => {
 const workspaces = computed(() => page.props.workspaces || []);
 const currentWorkspace = computed(() => page.props.currentWorkspace);
 const user = computed(() => page.props.auth.user);
+const plan = computed(() => page.props.plan || 'free');
 
 const isWorkspaceDropdownOpen = ref(false);
 
@@ -195,10 +196,10 @@ const isActive = (path) => {
           </Link>
 
           <Link
-            v-if="isAdmin"
-            :href="`/billing`"
+            v-if="isAdmin && currentWorkspace"
+            :href="`/workspaces/${currentWorkspace.id}/billing`"
             class="flex items-center gap-3 px-3 py-1.5 rounded-md text-sm font-medium text-text-secondary hover:text-text hover:bg-primary-light/50 transition-colors cursor-pointer"
-            :class="{ 'text-primary bg-primary-light/50 font-semibold': page.url === '/billing' }"
+            :class="{ 'text-primary bg-primary-light/50 font-semibold': isActive(`/workspaces/${currentWorkspace.id}/billing`) }"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-text-secondary">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 8.25h19V6A2.25 2.25 0 0 0 20.25 3.75H3.75A2.25 2.25 0 0 0 1.5 6v2.25ZM21.5 10.25h-19v6.5A2.25 2.25 0 0 0 4.75 19h14.5a2.25 2.25 0 0 0 2.25-2.25v-6.5ZM17.25 13.5h.008v.008h-.008V13.5Zm-3 0h.008v.008h-.008V13.5Z" />
@@ -211,6 +212,23 @@ const isActive = (path) => {
 
     <!-- User Area -->
     <div class="p-4 border-t border-border flex flex-col gap-2 bg-surface/50">
+      <!-- Subscription Plan Badge -->
+      <div v-if="currentWorkspace" class="px-1 py-0.5 flex items-center justify-between mb-1">
+        <div v-if="plan === 'free'" class="flex items-center justify-between w-full">
+          <span class="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Free Plan</span>
+          <Link
+            v-if="isAdmin"
+            :href="`/workspaces/${currentWorkspace.id}/billing`"
+            class="text-[11px] font-bold text-primary hover:text-primary-dark hover:underline"
+          >
+            Upgrade →
+          </Link>
+        </div>
+        <div v-else-if="plan === 'pro'" class="flex items-center">
+          <span class="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">Pro</span>
+        </div>
+      </div>
+
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-full bg-primary text-white font-semibold flex items-center justify-center text-xs tracking-wider border border-border shrink-0 select-none">
           {{ userInitials }}

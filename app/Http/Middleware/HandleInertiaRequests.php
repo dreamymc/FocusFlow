@@ -92,6 +92,17 @@ class HandleInertiaRequests extends Middleware
                     ->first();
                 return $workspaceUser?->role;
             },
+            'plan' => function () use ($request) {
+                if (!$request->user()) {
+                    return 'free';
+                }
+                $workspaceId = session('current_workspace_id') ?: $request->user()->workspaces()->first()?->id;
+                if (!$workspaceId) {
+                    return 'free';
+                }
+                $workspace = $request->user()->workspaces()->find($workspaceId);
+                return ($workspace && $workspace->subscribed('default')) ? 'pro' : 'free';
+            },
         ]);
     }
 }

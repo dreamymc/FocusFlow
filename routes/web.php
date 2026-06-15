@@ -33,6 +33,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/workspaces/{workspace}', [\App\Http\Controllers\Web\WorkspaceController::class, 'update'])->name('workspaces.update');
         Route::post('/workspaces/{workspace}/invite', [\App\Http\Controllers\Web\WorkspaceController::class, 'invite'])->name('workspaces.invite');
 
+        Route::get('/workspaces/{workspace}/billing', [\App\Http\Controllers\Web\BillingController::class, 'index'])->name('billing.index');
+        Route::post('/workspaces/{workspace}/billing/portal', [\App\Http\Controllers\Web\BillingController::class, 'portal'])->name('billing.portal');
+
         Route::get('/workspaces/{workspace}/projects', [\App\Http\Controllers\Web\ProjectController::class, 'index'])->name('workspaces.projects.index');
         Route::post('/workspaces/{workspace}/projects', [\App\Http\Controllers\Web\ProjectController::class, 'store'])->name('workspaces.projects.store');
         Route::get('/workspaces/{workspace}/projects/{project}', [\App\Http\Controllers\Web\KanbanController::class, 'show'])->name('kanban.show');
