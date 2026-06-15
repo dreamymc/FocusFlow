@@ -19,4 +19,10 @@ class Workspace extends Model
             ->withPivot('role')
             ->withTimestamps();
     }
+
+    public function projects(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
 }
+
