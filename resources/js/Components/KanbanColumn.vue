@@ -62,10 +62,9 @@ const onDragEnd = (event) => {
       group="tasks"
       :disabled="readOnly"
       @end="onDragEnd"
-      :data-column-id="column.id"
       draggable=".task-card-wrapper"
       class="kanban-column-body flex-1 overflow-y-auto bg-surface-3/30 border border-transparent rounded-xl p-2 min-h-[450px] transition-all duration-200"
-      ghost-class="sortable-ghost opacity-40 ghost-class"
+      ghost-class="sortable-ghost"
       drag-class="rotate-[1deg]"
     >
       <!-- Task Cards -->
@@ -105,8 +104,10 @@ const onDragEnd = (event) => {
 </template>
 
 <style scoped>
-.kanban-column-body:has(.sortable-ghost),
-.kanban-column-body:has(.ghost-class) {
+.sortable-ghost {
+  opacity: 0.4;
+}
+.kanban-column-body:has(.sortable-ghost) {
   outline: 2px dashed #3B82F6;
   outline-offset: -2px;
   background-color: rgba(59, 130, 246, 0.05) !important;
