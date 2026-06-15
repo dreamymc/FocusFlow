@@ -98,6 +98,18 @@ const isActive = (path) => {
             <ColorIcon :name="workspace.name" :id="workspace.id" size="sm" />
             <span class="truncate">{{ workspace.name }}</span>
           </button>
+
+          <div class="border-t border-border mt-1.5 pt-1.5">
+            <Link
+              href="/workspaces/create"
+              class="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-primary-light transition-colors text-sm font-medium text-primary cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              <span>Create Workspace</span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -142,6 +154,7 @@ const isActive = (path) => {
         </div>
         <div class="flex flex-col gap-0.5">
           <Link
+            v-if="isAdmin"
             :href="`/workspaces/${currentWorkspace.id}/settings#members`"
             class="flex items-center gap-3 px-3 py-1.5 rounded-md text-sm font-medium text-text-secondary hover:text-text hover:bg-primary-light/50 transition-colors cursor-pointer"
             :class="{ 'text-primary bg-primary-light/50 font-semibold': page.url.endsWith('/settings#members') }"

@@ -1388,8 +1388,8 @@ ACCEPTANCE CRITERIA:
 |-------|------|--------|--------------|-----|
 | 0 | Foundation (Inertia + shadcn + design system) | ✅ Complete | `a1da131` → `f7b8f07` | — |
 | 1 | Authentication (Login + Register pages) | ✅ Complete | `cda0b4c` → `3c2dd49` | — |
-| 2 | App Shell (Sidebar, Navbar, Dashboard) | ✅ Complete | `0e33109` → `2c6a936` | — |
-| 3 | Workspaces (Create, Settings, Members, Invite) | ⬜ Not started | — | — |
+| 2 | App Shell (Sidebar, Navbar, Dashboard) | ✅ Complete | `0e33109` → `2c6a936` | `v0.2.0-frontend-phase-2` |
+| 3 | Workspaces (Create, Settings, Members, Invite) | 🔄 In progress | — | — |
 | 4 | Projects (Index, ProjectCard, Create modal) | ⬜ Not started | — | — |
 | 5 | Kanban Board ⭐ (Drag-and-drop board) | ⬜ Not started | — | — |
 | 6 | Task Detail (Modal, presence avatars) | ⬜ Not started | — | — |

@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import AppSidebar from '@/Components/AppSidebar.vue';
 import AppNavbar from '@/Components/AppNavbar.vue';
+import { Toaster } from '@/Components/ui/sonner';
 
 defineProps({
   title: {
@@ -28,5 +29,6 @@ defineProps({
         <slot />
       </main>
     </div>
+    <Toaster />
   </div>
 </template>
