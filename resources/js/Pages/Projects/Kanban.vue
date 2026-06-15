@@ -32,11 +32,11 @@ const { isViewer, isMember } = usePermissions();
 const page = usePage();
 const currentUserId = computed(() => page.props.auth?.user?.id);
 
-const localColumns = ref(structuredClone(props.columns));
+const localColumns = ref(JSON.parse(JSON.stringify(props.columns)));
 const workspaceChannel = ref(null);
 
 watch(() => props.columns, (newVal) => {
-  localColumns.value = structuredClone(newVal);
+  localColumns.value = JSON.parse(JSON.stringify(newVal));
 }, { deep: true });
 
 // Named WebSocket event handlers to target specific unbinding on stopListening
