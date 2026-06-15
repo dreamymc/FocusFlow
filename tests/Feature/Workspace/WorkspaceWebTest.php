@@ -4,26 +4,12 @@ use App\Models\User;
 use App\Models\Workspace;
 use App\Enums\WorkspaceRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);
 
-/**
- * Attach a user to a workspace with the given role in BOTH:
- * - the workspace_user pivot table (for WorkspaceScope membership checks)
- * - the Spatie model_has_roles table (for hasRole() checks in controllers)
- */
-function attachWithRole(Workspace $workspace, User $user, WorkspaceRole $role): void
-{
-    $workspace->users()->attach($user->id, ['role' => $role->value]);
+require_once __DIR__ . '/../../Support/WorkspaceHelpers.php';
 
-    $registrar = app(PermissionRegistrar::class);
-    $registrar->setPermissionsTeamId($workspace->id);
-
-    Role::findOrCreate($role->value, 'web');
-    $user->assignRole($role->value);
-}
+use function Tests\Support\attachWithRole;
 
 it('renders workspace creation page', function () {
     $user = User::factory()->create();

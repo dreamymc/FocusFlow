@@ -125,12 +125,13 @@ onMounted(() => {
 
 // Clean up Echo channel on component unmount
 onUnmounted(() => {
-  if (window.Echo && workspaceChannel.value) {
-    workspaceChannel.value.stopListening('TaskMoved', handleTaskMovedEvent);
-    workspaceChannel.value.stopListening('TaskAssigned', handleTaskAssignedEvent);
-    workspaceChannel.value.stopListening('TaskCommented', handleTaskCommentedEvent);
-    // Leave the private channel to free server resources
-    workspaceChannel.value.leave();
+  if (window.Echo) {
+    workspaceChannel.value?.stopListening('TaskMoved', handleTaskMovedEvent);
+    workspaceChannel.value?.stopListening('TaskAssigned', handleTaskAssignedEvent);
+    workspaceChannel.value?.stopListening('TaskCommented', handleTaskCommentedEvent);
+    // Use the documented Echo.leave() API (not channel-object .leave()) to
+    // correctly free the Pusher subscription and server-side presence resources.
+    window.Echo.leave('workspace.' + props.workspace.id);
   }
 });
 
