@@ -104,19 +104,6 @@ const initForms = () => {
   }
 };
 
-watch(() => [props.task, props.mode, props.open], () => {
-  initForms();
-}, { immediate: true, deep: true });
-
-// Custom debounce implementation
-function debounce(fn, delay) {
-  let timeoutId;
-  return function (...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), delay);
-  };
-}
-
 const isFormDirty = computed(() => {
   if (!props.task) return false;
   const currentAssigneeId = props.task.assignees && props.task.assignees.length > 0 ? props.task.assignees[0].id : null;
@@ -132,6 +119,27 @@ const isFormDirty = computed(() => {
          editForm.value.priority !== currentPriority ||
          assigneeId1 !== assigneeId2;
 });
+
+let lastTaskId = null;
+
+watch(() => [props.task, props.mode, props.open], () => {
+  const currentTaskId = props.task?.id || null;
+  const taskChanged = currentTaskId !== lastTaskId;
+  lastTaskId = currentTaskId;
+
+  if (taskChanged || !isFormDirty.value) {
+    initForms();
+  }
+}, { immediate: true, deep: true });
+
+// Custom debounce implementation
+function debounce(fn, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
 
 const performAutoSave = async () => {
   if (!props.task || readOnly.value) return;
@@ -372,7 +380,7 @@ const submitDelete = async () => {
           
           <!-- Presence Channel Avatars -->
           <div class="pt-2">
-            <PresenceAvatars :task-id="task.id" :current-user-id="currentUserId" />
+            <PresenceAvatars :key="task.id" :task-id="task.id" :current-user-id="currentUserId" />
           </div>
         </SheetHeader>
 

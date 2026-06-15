@@ -1,6 +1,6 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
-import { ref, computed, watch } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { toast } from 'vue-sonner';
 import { usePermissions } from '../../Composables/usePermissions';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout.vue';
@@ -29,11 +29,107 @@ const props = defineProps({
 
 const { isViewer, isMember } = usePermissions();
 
-const localColumns = ref(JSON.parse(JSON.stringify(props.columns)));
+const page = usePage();
+const currentUserId = computed(() => page.props.auth?.user?.id);
+
+const localColumns = ref(structuredClone(props.columns));
 
 watch(() => props.columns, (newVal) => {
-  localColumns.value = JSON.parse(JSON.stringify(newVal));
+  localColumns.value = structuredClone(newVal);
 }, { deep: true });
+
+// Named WebSocket event handlers to target specific unbinding on stopListening
+const handleTaskMovedEvent = (e) => {
+  let originalColumn = null;
+  let taskIndex = -1;
+
+  for (const col of localColumns.value) {
+    taskIndex = col.tasks.findIndex(t => t.id === e.task.id);
+    if (taskIndex !== -1) {
+      originalColumn = col;
+      break;
+    }
+  }
+
+  if (originalColumn && taskIndex !== -1) {
+    const newStatus = typeof e.task.status === 'object' ? e.task.status.value : e.task.status;
+
+    if (originalColumn.id !== newStatus) {
+      // Remove from original
+      originalColumn.tasks.splice(taskIndex, 1);
+
+      // Append to target
+      const targetCol = localColumns.value.find(c => c.id === newStatus);
+      if (targetCol) {
+        targetCol.tasks.push(e.task);
+      }
+
+      toast.info(`Task "${e.task.title}" was moved to ${newStatus}`);
+    } else {
+      // Update in place
+      originalColumn.tasks[taskIndex] = e.task;
+    }
+
+    if (selectedTask.value && selectedTask.value.id === e.task.id) {
+      selectedTask.value = e.task;
+    }
+  }
+};
+
+const handleTaskAssignedEvent = (e) => {
+  let foundColumn = null;
+  let taskIndex = -1;
+
+  for (const col of localColumns.value) {
+    taskIndex = col.tasks.findIndex(t => t.id === e.task.id);
+    if (taskIndex !== -1) {
+      foundColumn = col;
+      break;
+    }
+  }
+
+  if (foundColumn && taskIndex !== -1) {
+    const task = foundColumn.tasks[taskIndex];
+    if (!task.assignees) {
+      task.assignees = [];
+    }
+    if (!task.assignees.some(u => u.id === e.user.id)) {
+      task.assignees.push(e.user);
+    }
+
+    if (selectedTask.value && selectedTask.value.id === e.task.id) {
+      selectedTask.value = { ...task };
+    }
+
+    if (e.user.id === currentUserId.value) {
+      toast.success(`You were assigned to "${e.task.title}"`);
+    } else {
+      toast.info(`"${e.user.name}" was assigned to "${e.task.title}"`);
+    }
+  }
+};
+
+const handleTaskCommentedEvent = (e) => {
+  toast.info(`New comment on "${e.task.title}": "${e.comment}"`);
+};
+
+onMounted(() => {
+  if (window.Echo) {
+    const channel = window.Echo.private('workspace.' + props.workspace.id);
+    channel.listen('TaskMoved', handleTaskMovedEvent);
+    channel.listen('TaskAssigned', handleTaskAssignedEvent);
+    channel.listen('TaskCommented', handleTaskCommentedEvent);
+  }
+});
+
+onUnmounted(() => {
+  if (window.Echo) {
+    const channel = window.Echo.private('workspace.' + props.workspace.id);
+    channel.stopListening('TaskMoved', handleTaskMovedEvent);
+    channel.stopListening('TaskAssigned', handleTaskAssignedEvent);
+    channel.stopListening('TaskCommented', handleTaskCommentedEvent);
+  }
+});
 
 // State for Task Modal
 const showTaskModal = ref(false);
