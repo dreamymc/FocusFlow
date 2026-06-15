@@ -1,5 +1,5 @@
 <template>
-    <div class="relative inline-block bell-container">
+    <div ref="bellContainerRef" class="relative inline-block">
         <!-- Notification Trigger Button -->
         <button
             @click="toggleDropdown"
@@ -97,7 +97,12 @@
                         
                         <!-- Notification Message & Timestamp -->
                         <div class="flex-1 space-y-1">
-                            <p class="text-xs text-text-secondary leading-relaxed" v-html="sanitizeMessage(notification.message)"></p>
+                            <p class="text-xs text-text-secondary leading-relaxed">
+                                <template v-for="(part, i) in parseMessage(notification.message)" :key="i">
+                                    <strong v-if="part.bold" class="font-semibold text-text">{{ part.text }}</strong>
+                                    <span v-else>{{ part.text }}</span>
+                                </template>
+                            </p>
                             <div class="flex items-center gap-1 text-[10px] text-text-muted font-medium select-none">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -115,6 +120,8 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+
+const bellContainerRef = ref(null);
 
 const props = defineProps({
     workspaceId: {
@@ -156,17 +163,31 @@ watch(unreadCount, (newVal, oldVal) => {
     }
 });
 
-// Auto-close dropdown when clicking outside
+// Auto-close dropdown when clicking outside — use ref.contains() not CSS class
 const closeDropdown = (e) => {
-    if (isOpen.value && !e.target.closest('.bell-container')) {
+    if (isOpen.value && bellContainerRef.value && !bellContainerRef.value.contains(e.target)) {
         isOpen.value = false;
     }
 };
 
-const sanitizeMessage = (message) => {
-    if (!message) return '';
-    // Bold any text within quotes to create hierarchy
-    return message.replace(/"([^"]+)"/g, '<strong class="font-semibold text-text">$1</strong>');
+// Safe message parser — splits on quoted strings, returns structured parts (no v-html/XSS risk)
+const parseMessage = (message) => {
+    if (!message) return [{ text: '', bold: false }];
+    const parts = [];
+    const regex = /"([^"]+)"/g;
+    let lastIndex = 0;
+    let match;
+    while ((match = regex.exec(message)) !== null) {
+        if (match.index > lastIndex) {
+            parts.push({ text: message.slice(lastIndex, match.index), bold: false });
+        }
+        parts.push({ text: match[1], bold: true });
+        lastIndex = regex.lastIndex;
+    }
+    if (lastIndex < message.length) {
+        parts.push({ text: message.slice(lastIndex), bold: false });
+    }
+    return parts;
 };
 
 const getIconBgClass = (type) => {
@@ -235,8 +256,13 @@ onUnmounted(() => {
     if (typeof window !== 'undefined') {
         window.removeEventListener('click', closeDropdown);
     }
-    if (channel && window.Echo) {
-        window.Echo.leave(`workspace.${props.workspaceId}`);
+    // Stop individual listeners only — do NOT call Echo.leave() which would destroy
+    // the shared channel used by TaskModal for real-time comments.
+    if (channel) {
+        channel.stopListening('TaskMoved');
+        channel.stopListening('TaskAssigned');
+        channel.stopListening('TaskCommented');
+        channel = null;
     }
 });
 </script>

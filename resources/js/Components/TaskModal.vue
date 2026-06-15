@@ -113,6 +113,7 @@ const cleanupEchoListener = () => {
 
 onUnmounted(() => {
   cleanupEchoListener();
+  triggerAutoSave?.cancel();
 });
 
 const getCookie = (name) => {
@@ -203,13 +204,15 @@ watch(() => [props.task?.id, props.open], () => {
   }
 }, { immediate: true });
 
-// Custom debounce implementation
+// Custom debounce with .cancel() support — prevents stale saves after modal close
 function debounce(fn, delay) {
   let timeoutId;
-  return function (...args) {
+  function debounced(...args) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => fn.apply(this, args), delay);
-  };
+  }
+  debounced.cancel = () => clearTimeout(timeoutId);
+  return debounced;
 }
 
 const performAutoSave = async () => {
@@ -252,10 +255,12 @@ const performAutoSave = async () => {
 const triggerAutoSave = debounce(performAutoSave, 500);
 
 const handleClose = () => {
+  triggerAutoSave.cancel();
   if (hasChangesBeenSaved.value) {
     toast.success('Task updated');
     hasChangesBeenSaved.value = false;
   }
+  saveStatus.value = '';
   emit('close');
 };
 
@@ -305,6 +310,11 @@ const submitCreate = async () => {
 const submitDelete = async () => {
   if (!props.task) return;
   isSaving.value = true;
+
+  // Reset immediately so handleClose (triggered by Sheet's @update:open) does NOT
+  // fire a spurious 'Task updated' toast alongside the 'Task deleted' toast.
+  hasChangesBeenSaved.value = false;
+  triggerAutoSave.cancel();
 
   try {
     const xsrf = getCookie('XSRF-TOKEN');
