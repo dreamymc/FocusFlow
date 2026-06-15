@@ -16,7 +16,10 @@
         "vue": "^3.5.38"
     },
     "dependencies": {
+        "@inertiajs/vue3": "^3.4.0",
+        "@vueuse/core": "^14.3.0",
         "laravel-echo": "^2.3.7",
-        "pusher-js": "^8.5.0"
+        "pusher-js": "^8.5.0",
+        "vue-draggable-plus": "^0.6.1"
     }
 }
