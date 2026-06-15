@@ -27,8 +27,8 @@ watch(() => props.column.tasks, (newTasks) => {
 
 const onDragEnd = (event) => {
   const taskId = Number(event.item.getAttribute('data-task-id'));
-  const toColumn = event.to.getAttribute('data-column-id');
-  const fromColumn = event.from.getAttribute('data-column-id');
+  const toColumn = event.to.closest('[data-column-id]')?.getAttribute('data-column-id');
+  const fromColumn = event.from.closest('[data-column-id]')?.getAttribute('data-column-id');
   
   // Only emit if it actually moved to a different column or different position
   emit('task-moved', {
@@ -42,7 +42,7 @@ const onDragEnd = (event) => {
 </script>
 
 <template>
-  <div class="w-[280px] shrink-0 flex flex-col max-h-[80vh]">
+  <div class="w-[280px] shrink-0 flex flex-col max-h-[80vh]" :data-column-id="column.id">
     <!-- Column Header -->
     <div
       class="flex items-center justify-between px-3 py-2 border-l-4 mb-3"
