@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'scope.workspace' => \App\Http\Middleware\WorkspaceScope::class,
         ]);
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
         $middleware->appendToGroup('api', [
             \App\Http\Middleware\SetSecurityHeaders::class,
         ]);

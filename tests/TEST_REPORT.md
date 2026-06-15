@@ -1,7 +1,7 @@
 PHPUnit 12.5.29 by Sebastian Bergmann and contributors.
 Runtime: PHP 8.5.4 with PCOV 1.0.12
 Configuration: /home/visionmc/projects/focusflow/phpunit.xml
-Time: 00:13.560, Memory: 84.50 MB
+Time: 00:14.267, Memory: 82.50 MB
 /home/visionmc/projects/focusflow/tests/Feature/AppShellTest.php
  unauthenticated users are redirected to login
  authenticated users are redirected to dashboard from root
@@ -162,8 +162,8 @@ Time: 00:13.560, Memory: 84.50 MB
 /home/visionmc/projects/focusflow/tests/Unit/Services/SlackNotificationServiceTest.php
  it sends a slack notification
 OK (115 tests, 381 assertions)
-Generating code coverage report in PHP format .. done [00:00.002]
-{"tool":"pest","result":"passed","tests":115,"passed":115,"assertions":381,"duration_ms":13556}
+Generating code coverage report in PHP format .. done [00:00.003]
+{"tool":"pest","result":"passed","tests":115,"passed":115,"assertions":381,"duration_ms":14267}
  Actions/AcceptInviteAction .. 100.0% 
  Actions/CancelSubscriptionAction .. 100.0% 
  Actions/CreateProjectAction .. 100.0% 
