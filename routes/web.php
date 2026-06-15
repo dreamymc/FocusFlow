@@ -7,6 +7,8 @@ use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\RegisterController;
 use App\Http\Controllers\Web\Auth\LogoutController;
 
+use App\Http\Controllers\Web\WorkspaceSwitchController;
+
 // Stripe webhook — must be BEFORE auth middleware
 Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])
     ->middleware(VerifyWebhookSignature::class);
@@ -20,4 +22,6 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LogoutController::class, 'destroy'])->name('logout');
+    Route::post('/workspaces/switch', [WorkspaceSwitchController::class, 'store'])->name('workspaces.switch');
 });
+
