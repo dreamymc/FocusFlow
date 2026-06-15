@@ -28,22 +28,34 @@ class Task extends Model
         'priority' => TaskPriority::class,
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Project, $this>
+     */
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Workspace, $this>
+     */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\User, $this>
+     */
     public function assignees(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_assignees')
             ->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Label, $this>
+     */
     public function labels(): BelongsToMany
     {
         return $this->belongsToMany(Label::class, 'task_label')

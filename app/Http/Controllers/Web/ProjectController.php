@@ -15,7 +15,7 @@ class ProjectController extends Controller
     {
         return Inertia::render('Projects/Index', [
             'workspace' => $workspace,
-            'projects' => $workspace->projects()->withCount('tasks')->get()->map(function ($project) {
+            'projects' => $workspace->projects()->withCount('tasks')->get()->map(function (\App\Models\Project $project) {
                 return [
                     'id' => $project->id,
                     'name' => $project->name,

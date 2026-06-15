@@ -13,13 +13,19 @@ class Workspace extends Model
 
     protected $fillable = ['name'];
 
-    public function users(): BelongsToMany
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\User, $this>
+     */
+     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'workspace_user')
             ->withPivot('role')
             ->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Project, $this>
+     */
     public function projects(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Project::class);

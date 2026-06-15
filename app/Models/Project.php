@@ -18,11 +18,17 @@ class Project extends Model
         'description',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Workspace, $this>
+     */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Task, $this>
+     */
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);

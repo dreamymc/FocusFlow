@@ -42,7 +42,7 @@ class WorkspaceController extends Controller
 
         return Inertia::render('Workspaces/Settings', [
             'workspace' => $workspace,
-            'members' => $workspace->users()->withPivot('role')->get()->map(function ($user) {
+            'members' => $workspace->users()->withPivot('role')->get()->map(function (\App\Models\User $user) {
                 return [
                     'id' => $user->id,
                     'name' => $user->name,

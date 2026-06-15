@@ -62,7 +62,7 @@ class DashboardController extends Controller
                 'title' => $t->title,
                 'status' => $t->status->value,
                 'status_label' => $t->status->label(),
-                'project_name' => $t->project?->name ?? 'No Project',
+                'project_name' => $t->project ? $t->project->name : 'No Project',
                 'project_id' => $t->project_id,
             ]);
 
