@@ -102,6 +102,8 @@ const handleTaskMoved = async ({ taskId, fromColumn, toColumn, newIndex, oldInde
     if (!response.ok) {
       throw new Error('Failed to move task');
     }
+
+    toast.success('Task moved successfully');
   } catch (error) {
     // Revert state
     let backupTask = null;

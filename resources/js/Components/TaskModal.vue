@@ -55,6 +55,7 @@ const currentUserId = computed(() => page.props.auth?.user?.id);
 const isSaving = ref(false);
 const saveStatus = ref(''); // '', 'saving', 'saved', 'error'
 const showDeleteConfirm = ref(false);
+const hasChangesBeenSaved = ref(false);
 
 // Comments state
 const comments = ref([]);
@@ -186,6 +187,10 @@ watch(() => [props.task?.id, props.open], () => {
   const taskChanged = currentTaskId !== lastTaskId;
   lastTaskId = currentTaskId;
 
+  if (props.open) {
+    hasChangesBeenSaved.value = false;
+  }
+
   if (taskChanged || !isFormDirty.value) {
     initForms();
   }
@@ -237,6 +242,7 @@ const performAutoSave = async () => {
     const result = await response.json();
     emit('task-updated', result.data);
     saveStatus.value = 'saved';
+    hasChangesBeenSaved.value = true;
   } catch (error) {
     saveStatus.value = 'error';
     toast.error('Failed to auto-save task.');
@@ -244,6 +250,14 @@ const performAutoSave = async () => {
 };
 
 const triggerAutoSave = debounce(performAutoSave, 500);
+
+const handleClose = () => {
+  if (hasChangesBeenSaved.value) {
+    toast.success('Task updated');
+    hasChangesBeenSaved.value = false;
+  }
+  emit('close');
+};
 
 // Watchers for inline edits in view mode
 watch(() => [editForm.value.title, editForm.value.description, editForm.value.status, editForm.value.priority, editForm.value.assigneeId], () => {
@@ -357,7 +371,7 @@ const submitComment = async () => {
 </script>
 
 <template>
-  <Sheet :open="open" @update:open="val => !val && emit('close')">
+  <Sheet :open="open" @update:open="val => !val && handleClose()">
     <SheetContent class="w-full sm:max-w-[540px] overflow-y-auto bg-surface border-l border-border p-6 shadow-xl">
       
       <!-- CREATE MODE -->
@@ -450,7 +464,7 @@ const submitComment = async () => {
           <div class="pt-4 flex justify-end gap-3 border-t border-border/40">
             <button
               type="button"
-              @click="emit('close')"
+              @click="handleClose"
               class="inline-flex items-center justify-center rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-text hover:bg-surface-2 transition-colors cursor-pointer"
               :disabled="isSaving"
             >
