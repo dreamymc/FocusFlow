@@ -17,7 +17,11 @@ class MoveTaskAction
             'status' => $status->value,
         ]);
 
-        event(new TaskMoved($task, $previousStatus));
+        try {
+            event(new TaskMoved($task, $previousStatus));
+        } catch (\Illuminate\Broadcasting\BroadcastException $e) {
+            report($e);
+        }
 
         if ($status === TaskStatus::Done && $previousStatus !== TaskStatus::Done) {
             event(new TaskCompleted($task));

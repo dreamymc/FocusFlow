@@ -39,3 +39,52 @@ it('dispatches TaskCompleted when moved to Done', function () {
         return $event->task->id === $task->id;
     });
 });
+
+use Illuminate\Support\Facades\Exceptions;
+
+it('gracefully handles event broadcasting failures', function () {
+    Exceptions::fake();
+
+    Event::shouldReceive('dispatch')
+        ->once()
+        ->with(Mockery::type(TaskMoved::class))
+        ->andThrow(new \Illuminate\Broadcasting\BroadcastException('Pusher error: cURL error 7'));
+
+    Event::shouldReceive('dispatch')
+        ->zeroOrMoreTimes()
+        ->with(Mockery::type(TaskCompleted::class));
+
+    Event::shouldReceive('dispatch')
+        ->zeroOrMoreTimes()
+        ->with(Mockery::type(\Illuminate\Log\Events\MessageLogged::class));
+
+    $task = Task::factory()->create(['status' => TaskStatus::Backlog->value]);
+    
+    $action = app(MoveTaskAction::class);
+    $updatedTask = $action->execute($task, TaskStatus::InProgress);
+    
+    expect($updatedTask->status->value)->toBe(TaskStatus::InProgress->value);
+    Exceptions::assertReported(\Illuminate\Broadcasting\BroadcastException::class);
+});
+
+it('does not swallow unrelated critical exceptions during task move', function () {
+    Event::shouldReceive('dispatch')
+        ->once()
+        ->with(Mockery::type(TaskMoved::class))
+        ->andThrow(new \RuntimeException('Database connection lost'));
+
+    Event::shouldReceive('dispatch')
+        ->zeroOrMoreTimes()
+        ->with(Mockery::type(TaskCompleted::class));
+
+    Event::shouldReceive('dispatch')
+        ->zeroOrMoreTimes()
+        ->with(Mockery::type(\Illuminate\Log\Events\MessageLogged::class));
+
+    $task = Task::factory()->create(['status' => TaskStatus::Backlog->value]);
+    
+    $action = app(MoveTaskAction::class);
+    
+    expect(fn() => $action->execute($task, TaskStatus::InProgress))
+        ->toThrow(\RuntimeException::class, 'Database connection lost');
+});
