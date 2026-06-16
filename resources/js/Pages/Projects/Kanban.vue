@@ -123,6 +123,11 @@ const isLoading = ref(true);
 onMounted(() => {
   setTimeout(() => {
     isLoading.value = false;
+    const urlParams = new URLSearchParams(window.location.search);
+    const taskId = urlParams.get('task');
+    if (taskId) {
+      openTaskModal(Number(taskId));
+    }
   }, 400);
 
   if (window.Echo) {

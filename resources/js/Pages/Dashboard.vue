@@ -237,12 +237,29 @@ const getStatusBadgeClass = (status) => {
 
             <!-- Task Info -->
             <div class="min-w-0 flex-1">
-              <span class="text-sm font-semibold text-text group-hover:text-primary transition-colors block leading-snug truncate">
+              <Link
+                v-slot:default
+                v-if="currentWorkspace && task.project_id"
+                :href="`/workspaces/${currentWorkspace.id}/projects/${task.project_id}?task=${task.id}`"
+                class="text-sm font-semibold text-text hover:text-primary transition-colors block leading-snug truncate outline-none cursor-pointer"
+              >
+                {{ task.title }}
+              </Link>
+              <span v-else class="text-sm font-semibold text-text block leading-snug truncate">
                 {{ task.title }}
               </span>
               <div class="flex items-center gap-2 mt-0.5">
                 <span class="text-[11px] text-text-secondary font-medium tracking-tight font-sans">
-                  Project: <span class="font-semibold text-text-secondary">{{ task.project_name }}</span>
+                  Project: 
+                  <Link
+                    v-slot:default
+                    v-if="currentWorkspace && task.project_id"
+                    :href="`/workspaces/${currentWorkspace.id}/projects/${task.project_id}`"
+                    class="font-semibold text-text-secondary hover:text-primary transition-colors cursor-pointer"
+                  >
+                    {{ task.project_name }}
+                  </Link>
+                  <span v-else class="font-semibold text-text-secondary">{{ task.project_name }}</span>
                 </span>
               </div>
             </div>
