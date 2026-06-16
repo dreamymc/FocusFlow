@@ -42,11 +42,11 @@ const onDragEnd = (event) => {
 
 const columnTintClass = computed(() => {
   return {
-    'backlog': 'bg-slate-50/40 border-slate-100/50',
-    'in_progress': 'bg-blue-50/20 border-blue-100/30',
-    'in_review': 'bg-amber-50/20 border-amber-100/30',
-    'done': 'bg-emerald-50/20 border-emerald-100/30'
-  }[props.column.id] || 'bg-surface-3/30 border-transparent';
+    'backlog': 'bg-slate-900/40 border-slate-900',
+    'in_progress': 'bg-blue-950/10 border-blue-950/35',
+    'in_review': 'bg-amber-950/10 border-amber-950/35',
+    'done': 'bg-emerald-950/10 border-emerald-950/35'
+  }[props.column.id] || 'bg-slate-900/30 border-slate-800';
 });
 </script>
 
@@ -57,10 +57,10 @@ const columnTintClass = computed(() => {
       class="flex items-center justify-between px-3 py-2 border-l-4 mb-3"
       :style="{ borderLeftColor: column.color }"
     >
-      <span class="font-display font-semibold text-sm text-text">
+      <span class="font-display font-semibold text-sm text-slate-200">
         {{ column.label }}
       </span>
-      <span class="w-5 h-5 rounded-full bg-surface-3 text-text-secondary text-xs flex items-center justify-center font-medium">
+      <span class="w-5 h-5 rounded-full bg-slate-900 text-slate-400 text-xs flex items-center justify-center font-medium border border-slate-800">
         {{ localTasks.length }}
       </span>
     </div>
@@ -72,7 +72,7 @@ const columnTintClass = computed(() => {
       :disabled="readOnly"
       @end="onDragEnd"
       draggable=".task-card-wrapper"
-      class="kanban-column-body flex-1 overflow-y-auto border rounded-xl p-2 min-h-[450px] transition-all duration-200"
+      class="kanban-column-body flex-1 overflow-y-auto border border-slate-800/80 rounded-xl p-2 min-h-[450px] transition-all duration-200"
       :class="columnTintClass"
       ghost-class="sortable-ghost"
       drag-class="drag-active"
@@ -95,9 +95,9 @@ const columnTintClass = computed(() => {
       <!-- Empty State inside Column -->
       <div
         v-if="localTasks.length === 0"
-        class="flex flex-col items-center justify-center py-12 px-4 text-center border-2 border-dashed border-border/40 rounded-lg select-none"
+        class="flex flex-col items-center justify-center py-12 px-4 text-center border-2 border-dashed border-slate-800/60 rounded-lg select-none"
       >
-        <span class="text-xs font-medium text-text-muted">Drop tasks here</span>
+        <span class="text-xs font-medium text-slate-500">Drop tasks here</span>
       </div>
     </VueDraggable>
 

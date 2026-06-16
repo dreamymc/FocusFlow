@@ -16,7 +16,7 @@ const { isOpen, close } = useSidebar();
 </script>
 
 <template>
-  <div class="min-h-screen bg-surface-2 flex">
+  <div class="min-h-screen bg-slate-950 text-slate-100 flex">
     <Head :title="title" />
     
     <!-- Sidebar -->

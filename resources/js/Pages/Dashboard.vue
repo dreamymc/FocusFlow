@@ -27,11 +27,11 @@ const currentWorkspace = computed(() => page.props.currentWorkspace);
 // Status Badge Styling Helper
 const getStatusBadgeClass = (status) => {
   return {
-    'backlog': 'bg-slate-100 text-slate-700 border-slate-200',
-    'in_progress': 'bg-blue-50 text-blue-700 border-blue-200',
-    'in_review': 'bg-amber-50 text-amber-700 border-amber-200',
-    'done': 'bg-emerald-50 text-emerald-700 border-emerald-200'
-  }[status] || 'bg-slate-100 text-slate-700 border-slate-200';
+    'backlog': 'bg-slate-950/60 text-slate-400 border-slate-800/80',
+    'in_progress': 'bg-blue-950/40 text-blue-400 border-blue-900/40',
+    'in_review': 'bg-amber-950/40 text-amber-400 border-amber-900/40',
+    'done': 'bg-emerald-950/40 text-emerald-400 border-emerald-900/40'
+  }[status] || 'bg-slate-950/60 text-slate-400 border-slate-800/80';
 };
 </script>
 
@@ -41,52 +41,52 @@ const getStatusBadgeClass = (status) => {
     <div v-if="isLoading" class="space-y-8 animate-pulse">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <!-- Card: Total Tasks Skeleton (spans 2) -->
-        <div class="md:col-span-2 bg-surface border border-border rounded-2xl p-8 flex items-center justify-between shadow-sm">
+        <div class="md:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-8 flex items-center justify-between shadow-sm">
           <div class="space-y-3 flex-1">
-            <div class="h-3 bg-slate-200 rounded w-1/4"></div>
-            <div class="h-10 bg-slate-200 rounded w-1/5"></div>
+            <div class="h-3 bg-slate-800 rounded w-1/4"></div>
+            <div class="h-10 bg-slate-800 rounded w-1/5"></div>
           </div>
-          <div class="w-14 h-14 bg-slate-200 rounded-xl"></div>
+          <div class="w-14 h-14 bg-slate-800 rounded-xl"></div>
         </div>
         <!-- Card: In Progress Skeleton (spans 1) -->
-        <div class="md:col-span-1 bg-surface border border-border rounded-2xl p-6 flex items-center justify-between shadow-sm">
+        <div class="md:col-span-1 bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-sm">
           <div class="space-y-2 flex-1">
-            <div class="h-3 bg-slate-200 rounded w-1/3"></div>
-            <div class="h-8 bg-slate-200 rounded w-1/4"></div>
+            <div class="h-3 bg-slate-800 rounded w-1/3"></div>
+            <div class="h-8 bg-slate-800 rounded w-1/4"></div>
           </div>
-          <div class="w-12 h-12 bg-slate-200 rounded-lg"></div>
+          <div class="w-12 h-12 bg-slate-800 rounded-lg"></div>
         </div>
         <!-- Card: Completed Today Skeleton (spans 1) -->
-        <div class="md:col-span-1 bg-surface border border-border rounded-2xl p-6 flex items-center justify-between shadow-sm">
+        <div class="md:col-span-1 bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-sm">
           <div class="space-y-2 flex-1">
-            <div class="h-3 bg-slate-200 rounded w-1/3"></div>
-            <div class="h-8 bg-slate-200 rounded w-1/4"></div>
+            <div class="h-3 bg-slate-800 rounded w-1/3"></div>
+            <div class="h-8 bg-slate-800 rounded w-1/4"></div>
           </div>
-          <div class="w-12 h-12 bg-slate-200 rounded-lg"></div>
+          <div class="w-12 h-12 bg-slate-800 rounded-lg"></div>
         </div>
       </div>
       
       <!-- Recent Activity Skeleton -->
-      <div class="bg-surface border border-border rounded-2xl p-8 space-y-6 shadow-sm">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 space-y-6 shadow-sm">
         <div class="space-y-2 mb-4">
-          <div class="h-4 bg-slate-200 rounded w-1/4"></div>
-          <div class="h-3 bg-slate-200 rounded w-1/3"></div>
+          <div class="h-4 bg-slate-800 rounded w-1/4"></div>
+          <div class="h-3 bg-slate-800 rounded w-1/3"></div>
         </div>
-        <div class="relative pl-6 ml-4 border-l-2 border-slate-100 space-y-6 py-2">
+        <div class="relative pl-6 ml-4 border-l-2 border-slate-800 space-y-6 py-2">
           <div v-for="i in 4" :key="i" class="relative flex items-center justify-between py-1">
-            <div class="absolute -left-[33px] w-4 h-4 rounded-full bg-slate-200 border-2 border-surface flex items-center justify-center"></div>
+            <div class="absolute -left-[33px] w-4 h-4 rounded-full bg-slate-850 border-2 border-slate-900 flex items-center justify-center"></div>
             <div class="space-y-2 flex-1">
-              <div class="h-4 bg-slate-200 rounded w-1/3"></div>
-              <div class="h-3 bg-slate-200 rounded w-1/6"></div>
+              <div class="h-4 bg-slate-800 rounded w-1/3"></div>
+              <div class="h-3 bg-slate-800 rounded w-1/6"></div>
             </div>
-            <div class="w-16 h-6 bg-slate-200 rounded-full"></div>
+            <div class="w-16 h-6 bg-slate-800 rounded-full"></div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State: No Workspace -->
-    <div v-else-if="!currentWorkspace" class="flex flex-col items-center justify-center min-h-[65vh] bg-surface/60 backdrop-blur-md border border-border/80 rounded-2xl p-12 text-center shadow-lg max-w-2xl mx-auto my-4 transition-all duration-300">
+    <div v-else-if="!currentWorkspace" class="flex flex-col items-center justify-center min-h-[65vh] bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center shadow-lg max-w-2xl mx-auto my-4 transition-all duration-300">
       <!-- Custom elegant SVG line-art -->
       <div class="relative mb-8 group">
         <!-- Soft background glow -->
@@ -128,8 +128,8 @@ const getStatusBadgeClass = (status) => {
         </svg>
       </div>
       
-      <h2 class="font-display-title text-text mb-3 tracking-tight">Create your first Workspace</h2>
-      <p class="text-text-secondary text-sm max-w-md mb-8 leading-relaxed">
+      <h2 class="font-display-title text-slate-100 mb-3 tracking-tight">Create your first Workspace</h2>
+      <p class="text-slate-400 text-sm max-w-md mb-8 leading-relaxed">
         Workspaces are the collaborative hubs of FocusFlow. Team members, tasks, and project timelines all live here. Create one to begin your productivity flow.
       </p>
       
@@ -149,12 +149,12 @@ const getStatusBadgeClass = (status) => {
       <!-- Metric Cards Row -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <!-- Card: Total Tasks -->
-        <div class="md:col-span-2 bg-gradient-to-br from-surface to-primary-light/20 border border-primary/20 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex items-center justify-between group">
+        <div class="md:col-span-2 bg-gradient-to-br from-slate-900 to-slate-900/60 border border-slate-800/85 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex items-center justify-between group">
           <div class="space-y-2">
-            <span class="label-uppercase-tracked block">Total Tasks</span>
-            <p class="text-4xl font-display font-extrabold text-text leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.totalTasks ?? 0 }}</p>
+            <span class="label-uppercase-tracked block text-slate-400">Total Tasks</span>
+            <p class="text-4xl font-display font-extrabold text-slate-100 leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.totalTasks ?? 0 }}</p>
           </div>
-          <div class="w-14 h-14 bg-primary-light border border-primary/20 rounded-xl flex items-center justify-center text-primary shadow-sm shadow-primary/10 transition-transform duration-300 group-hover:scale-105">
+          <div class="w-14 h-14 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-primary shadow-sm shadow-primary/10 transition-transform duration-300 group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.375c1.08 0 1.958-.87 1.958-1.958V13.5m-6.75-2.25H12a1.875 1.875 0 0 0 0-3.75H9v3.75Z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5A3.375 3.375 0 0 0 10.125 2.25H3.75A1.125 1.125 0 0 0 2.625 3.375v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V14.25Z" />
@@ -163,12 +163,12 @@ const getStatusBadgeClass = (status) => {
         </div>
 
         <!-- Card: In Progress -->
-        <div class="md:col-span-1 bg-surface border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-blue-200/80 transition-all duration-300 flex items-center justify-between group">
+        <div class="md:col-span-1 bg-slate-900 border border-slate-800/85 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-blue-500/30 transition-all duration-300 flex items-center justify-between group">
           <div class="space-y-2">
-            <span class="label-uppercase-tracked block">In Progress</span>
-            <p class="text-3xl font-display font-extrabold text-text leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.activeTasks ?? 0 }}</p>
+            <span class="label-uppercase-tracked block text-slate-400">In Progress</span>
+            <p class="text-3xl font-display font-extrabold text-slate-100 leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.activeTasks ?? 0 }}</p>
           </div>
-          <div class="w-12 h-12 bg-blue-50/80 border border-blue-100/50 rounded-xl flex items-center justify-center text-blue-600 shadow-sm shadow-blue-500/5 transition-transform duration-300 group-hover:scale-105">
+          <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-blue-400 shadow-sm shadow-blue-500/5 transition-transform duration-300 group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
             </svg>
@@ -176,12 +176,12 @@ const getStatusBadgeClass = (status) => {
         </div>
 
         <!-- Card: Completed Today -->
-        <div class="md:col-span-1 bg-surface border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-emerald-200/80 transition-all duration-300 flex items-center justify-between group">
+        <div class="md:col-span-1 bg-slate-900 border border-slate-800/85 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-emerald-500/30 transition-all duration-300 flex items-center justify-between group">
           <div class="space-y-2">
-            <span class="label-uppercase-tracked block">Completed Today</span>
-            <p class="text-3xl font-display font-extrabold text-text leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.completedToday ?? 0 }}</p>
+            <span class="label-uppercase-tracked block text-slate-400">Completed Today</span>
+            <p class="text-3xl font-display font-extrabold text-slate-100 leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.completedToday ?? 0 }}</p>
           </div>
-          <div class="w-12 h-12 bg-emerald-50/80 border border-emerald-100/50 rounded-xl flex items-center justify-center text-emerald-600 shadow-sm shadow-emerald-500/5 transition-transform duration-300 group-hover:scale-105">
+          <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-emerald-400 shadow-sm shadow-emerald-500/5 transition-transform duration-300 group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
@@ -190,25 +190,25 @@ const getStatusBadgeClass = (status) => {
       </div>
 
       <!-- Recent Activity Section -->
-      <div class="bg-surface border border-border rounded-2xl p-8 shadow-sm">
+      <div class="bg-slate-900 border border-slate-800/85 rounded-2xl p-8 shadow-sm">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div class="space-y-1">
-            <h2 class="text-lg font-display font-bold text-text">Recent Task Activity</h2>
-            <p class="text-xs text-text-secondary">Keep track of the latest updates and assignments across your projects.</p>
+            <h2 class="text-lg font-display font-bold text-slate-100">Recent Task Activity</h2>
+            <p class="text-xs text-slate-400 font-sans">Keep track of the latest updates and assignments across your projects.</p>
           </div>
         </div>
         
-        <div v-if="recentTasks.length === 0" class="flex flex-col items-center justify-center py-16 text-center bg-slate-50/50 dark:bg-slate-900/10 border border-dashed border-border rounded-xl">
-          <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center text-text-muted mb-4 border border-border/50">
+        <div v-if="recentTasks.length === 0" class="flex flex-col items-center justify-center py-16 text-center bg-slate-950/40 border border-dashed border-slate-800 rounded-xl">
+          <div class="w-12 h-12 bg-slate-950 rounded-xl flex items-center justify-center text-slate-500 mb-4 border border-slate-800">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.375c1.08 0 1.958-.87 1.958-1.958V13.5m-6.75-2.25H12a1.875 1.875 0 0 0 0-3.75H9v3.75Z" />
             </svg>
           </div>
-          <h3 class="text-sm font-semibold text-text mb-1">No tasks assigned</h3>
-          <p class="text-xs text-text-secondary max-w-xs leading-normal">You have no tasks yet. Ask your team to assign you some or start by creating a task.</p>
+          <h3 class="text-sm font-semibold text-slate-200 mb-1">No tasks assigned</h3>
+          <p class="text-xs text-slate-400 max-w-xs leading-normal">You have no tasks yet. Ask your team to assign you some or start by creating a task.</p>
         </div>
         
-        <div v-else class="relative pl-6 ml-4 border-l-2 border-slate-100 dark:border-slate-800 space-y-6 py-2">
+        <div v-else class="relative pl-6 ml-4 border-l-2 border-slate-800 space-y-6 py-2">
           <div
             v-for="task in recentTasks"
             :key="task.id"
@@ -216,33 +216,33 @@ const getStatusBadgeClass = (status) => {
           >
             <!-- Timeline Bullet -->
             <div 
-              class="absolute -left-[33px] w-4 h-4 rounded-full bg-surface border-2 flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 z-10"
+              class="absolute -left-[33px] w-4 h-4 rounded-full bg-slate-950 border-2 flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 z-10"
               :class="{
-                'border-emerald-500': task.status === 'done',
-                'border-blue-500': task.status === 'in_progress',
-                'border-amber-500': task.status === 'in_review',
-                'border-slate-400': task.status === 'backlog'
+                'border-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.2)]': task.status === 'done',
+                'border-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.2)]': task.status === 'in_progress',
+                'border-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.2)]': task.status === 'in_review',
+                'border-slate-600': task.status === 'backlog'
               }"
             >
               <div 
-                class="w-1.5 h-1.5 rounded-full"
+                class="w-1.5 h-1.5 rounded-full animate-pulse"
                 :class="{
                   'bg-emerald-500': task.status === 'done',
                   'bg-blue-500': task.status === 'in_progress',
                   'bg-amber-500': task.status === 'in_review',
-                  'bg-slate-400': task.status === 'backlog'
+                  'bg-slate-600': task.status === 'backlog'
                 }"
               ></div>
             </div>
 
             <!-- Task Info -->
             <div class="min-w-0 flex-1">
-              <span class="text-sm font-semibold text-text group-hover:text-primary transition-colors block leading-snug truncate">
+              <span class="text-sm font-semibold text-slate-200 group-hover:text-primary transition-colors block leading-snug truncate">
                 {{ task.title }}
               </span>
               <div class="flex items-center gap-2 mt-0.5">
-                <span class="text-[11px] text-text-muted font-medium tracking-tight">
-                  Project: <span class="font-semibold text-text-secondary">{{ task.project_name }}</span>
+                <span class="text-[11px] text-slate-400 font-medium tracking-tight font-sans">
+                  Project: <span class="font-semibold text-slate-300">{{ task.project_name }}</span>
                 </span>
               </div>
             </div>

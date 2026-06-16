@@ -73,12 +73,12 @@ const formatDate = (dateString) => {
 
 <template>
   <div
-    class="bg-surface rounded-lg border border-t-border border-r-border border-b-border border-l-4 p-3 shadow-sm select-none transition-all duration-200"
+    class="bg-slate-900 rounded-xl border border-t-slate-800 border-r-slate-800 border-b-slate-800 border-l-4 p-3.5 shadow-sm select-none transition-all duration-300"
     :class="[
       priorityBorderClass,
       readOnly
         ? 'cursor-default'
-        : 'cursor-grab active:cursor-grabbing hover:shadow-md hover:translate-y-[-2px] hover:border-border-strong',
+        : 'cursor-grab active:cursor-grabbing hover:shadow-lg hover:shadow-primary/5 hover:translate-y-[-2px] hover:border-slate-750',
       task.shaking ? 'animate-shake' : ''
     ]"
     @mousedown="onMouseDown"
@@ -87,23 +87,23 @@ const formatDate = (dateString) => {
   >
     <!-- Top row: Title -->
     <div class="flex items-start justify-between gap-2">
-      <h4 class="text-sm font-medium text-text line-clamp-2 leading-snug">
+      <h4 class="text-sm font-medium text-slate-200 line-clamp-2 leading-snug">
         {{ task.title }}
       </h4>
     </div>
 
     <!-- Bottom row: Task ID, Due Date & Assignees -->
-    <div class="flex items-center justify-between mt-3 pt-2 border-t border-border/40">
+    <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-800/80">
       <div class="flex items-center gap-2">
-        <span class="font-mono text-[10px] text-text-muted">
+        <span class="font-mono text-[10px] text-slate-500">
           TASK-{{ task.id }}
         </span>
         <span
           v-if="task.due_date"
           class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border transition-colors duration-150"
           :class="isOverdue(task.due_date)
-            ? 'text-accent-red bg-accent-red/5 border-accent-red/20 font-semibold'
-            : 'text-text-secondary bg-surface-2 border-border'"
+            ? 'text-red-400 bg-red-950/30 border-red-900/30 font-semibold'
+            : 'text-slate-300 bg-slate-950/60 border-slate-800'"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-2.5 h-2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
@@ -117,7 +117,7 @@ const formatDate = (dateString) => {
         <div
           v-for="(assignee, index) in task.assignees.slice(0, 3)"
           :key="assignee.id || index"
-          class="w-5 h-5 rounded-full bg-primary-light text-primary flex items-center justify-center font-semibold text-[9px] font-display border-2 border-surface shrink-0"
+          class="w-5 h-5 rounded-full bg-slate-800 text-slate-200 flex items-center justify-center font-semibold text-[9px] font-display border-2 border-slate-900 shrink-0"
           :style="{ zIndex: 10 - index }"
           :title="assignee.name"
         >
@@ -125,7 +125,7 @@ const formatDate = (dateString) => {
         </div>
         <div
           v-if="task.assignees.length > 3"
-          class="w-5 h-5 rounded-full bg-surface-3 text-text-secondary flex items-center justify-center font-medium text-[8px] font-display border-2 border-surface shrink-0"
+          class="w-5 h-5 rounded-full bg-slate-950 text-slate-400 flex items-center justify-center font-medium text-[8px] font-display border-2 border-slate-900 shrink-0"
           :style="{ zIndex: 5 }"
           :title="`${task.assignees.length - 3} more`"
         >
