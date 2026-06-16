@@ -249,7 +249,7 @@ const getProjectColorClass = (name, id) => {
       <!-- Subscription Plan Badge -->
       <div v-if="currentWorkspace" class="px-1 py-0.5 flex items-center justify-between">
         <div v-if="plan === 'free'" class="flex items-center justify-between w-full">
-          <span class="text-[10px] font-bold text-amber-500 bg-amber-950/40 px-2 py-0.5 rounded border border-amber-800/40 tracking-wide">Free Plan</span>
+          <span class="text-[10px] font-bold text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/40 px-2 py-0.5 rounded border border-amber-300 dark:border-amber-800/40 tracking-wide">Free Plan</span>
           <Link
             v-if="isAdmin"
             :href="`/workspaces/${currentWorkspace.id}/billing`"
