@@ -42,11 +42,11 @@ const onDragEnd = (event) => {
 
 const columnTintClass = computed(() => {
   return {
-    'backlog': 'bg-slate-900/40 border-slate-900',
-    'in_progress': 'bg-blue-950/10 border-blue-950/35',
-    'in_review': 'bg-amber-950/10 border-amber-950/35',
-    'done': 'bg-emerald-950/10 border-emerald-950/35'
-  }[props.column.id] || 'bg-slate-900/30 border-slate-800';
+    'backlog': 'bg-surface-3/30 border-border',
+    'in_progress': 'bg-blue-500/5 dark:bg-blue-950/10 border-blue-500/10 dark:border-blue-950/30',
+    'in_review': 'bg-amber-500/5 dark:bg-amber-950/10 border-amber-500/10 dark:border-amber-950/30',
+    'done': 'bg-emerald-500/5 dark:bg-emerald-950/10 border-emerald-500/10 dark:border-emerald-950/30'
+  }[props.column.id] || 'bg-surface-3/30 border-border';
 });
 </script>
 
@@ -57,10 +57,10 @@ const columnTintClass = computed(() => {
       class="flex items-center justify-between px-3 py-2 border-l-4 mb-3"
       :style="{ borderLeftColor: column.color }"
     >
-      <span class="font-display font-semibold text-sm text-slate-200">
+      <span class="font-display font-semibold text-sm text-text">
         {{ column.label }}
       </span>
-      <span class="w-5 h-5 rounded-full bg-slate-900 text-slate-400 text-xs flex items-center justify-center font-medium border border-slate-800">
+      <span class="w-5 h-5 rounded-full bg-surface text-text-secondary text-xs flex items-center justify-center font-medium border border-border">
         {{ localTasks.length }}
       </span>
     </div>
@@ -72,7 +72,7 @@ const columnTintClass = computed(() => {
       :disabled="readOnly"
       @end="onDragEnd"
       draggable=".task-card-wrapper"
-      class="kanban-column-body flex-1 overflow-y-auto border border-slate-800/80 rounded-xl p-2 min-h-[450px] transition-all duration-200"
+      class="kanban-column-body flex-1 overflow-y-auto border rounded-xl p-2 min-h-[450px] transition-all duration-200"
       :class="columnTintClass"
       ghost-class="sortable-ghost"
       drag-class="drag-active"
@@ -95,9 +95,9 @@ const columnTintClass = computed(() => {
       <!-- Empty State inside Column -->
       <div
         v-if="localTasks.length === 0"
-        class="flex flex-col items-center justify-center py-12 px-4 text-center border-2 border-dashed border-slate-800/60 rounded-lg select-none"
+        class="flex flex-col items-center justify-center py-12 px-4 text-center border-2 border-dashed border-border rounded-lg select-none"
       >
-        <span class="text-xs font-medium text-slate-500">Drop tasks here</span>
+        <span class="text-xs font-medium text-text-muted">Drop tasks here</span>
       </div>
     </VueDraggable>
 
@@ -118,17 +118,17 @@ const columnTintClass = computed(() => {
   opacity: 0.4;
 }
 .kanban-column-body:has(.sortable-ghost) {
-  outline: 2px dashed #3B82F6;
+  outline: 2px dashed var(--color-primary);
   outline-offset: -2px;
-  background-color: rgba(59, 130, 246, 0.05) !important;
+  background-color: rgba(99, 102, 241, 0.05) !important;
 }
 .drag-active {
   opacity: 0.95;
   transform: rotate(1deg) !important;
-  background-color: #EEF2FF !important;
+  background-color: var(--color-primary-light) !important;
   cursor: grabbing !important;
 }
 .drag-active :deep(.bg-surface) {
-  background-color: #EEF2FF !important;
+  background-color: var(--color-primary-light) !important;
 }
 </style>

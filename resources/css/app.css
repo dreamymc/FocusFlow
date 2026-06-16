@@ -137,6 +137,48 @@
     --sidebar-ring: #6366F1;
 }
 
+.dark {
+    --background: #020617;
+    --foreground: #F8FAFC;
+    --card: #0B0F19;
+    --card-foreground: #F8FAFC;
+    --popover: #0B0F19;
+    --popover-foreground: #F8FAFC;
+    --muted: #1E293B;
+    --muted-foreground: #64748B;
+    --accent: #1E1B4B;
+    --accent-foreground: #6366F1;
+    --border: #1E293B;
+    --input: #1E293B;
+    --ring: #6366F1;
+    
+    --color-surface: #0B0F19;
+    --color-surface-2: #020617;
+    --color-surface-3: #111827;
+    --color-surface-sidebar: #0B0F19;
+    --color-form-bg: #0B0F19;
+    
+    --color-text: #F8FAFC;
+    --color-text-secondary: #CBD5E1;
+    --color-color-text-secondary: #CBD5E1;
+    --color-text-muted: #64748B;
+    
+    --color-border: #1E293B;
+    --color-border-strong: #334155;
+    
+    --color-primary-light: #1E1B4B;
+    --color-secondary-light: #2E1065;
+    
+    --sidebar: #0B0F19;
+    --sidebar-foreground: #CBD5E1;
+    --sidebar-primary: #6366F1;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: #1E1B4B;
+    --sidebar-accent-foreground: #6366F1;
+    --sidebar-border: #1E293B;
+    --sidebar-ring: #6366F1;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -153,7 +195,7 @@
   body,
   * {
     scrollbar-width: thin;
-    scrollbar-color: #CBD5E1 transparent;
+    scrollbar-color: var(--color-border-strong) transparent;
   }
 
   html::-webkit-scrollbar,
@@ -172,7 +214,7 @@
   html::-webkit-scrollbar-thumb,
   body::-webkit-scrollbar-thumb,
   *::-webkit-scrollbar-thumb {
-    background-color: #CBD5E1;
+    background-color: var(--color-border-strong);
     border-radius: 9999px;
   }
 

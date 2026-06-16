@@ -57,7 +57,7 @@ const submit = () => {
           autofocus
           autocomplete="username"
           placeholder=" "
-          class="peer h-12 pt-5 pb-1 px-3.5 block w-full border border-border rounded-md text-text bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 text-sm transition-all"
+          class="peer h-12 pt-5 pb-1 px-3.5 block w-full border border-border rounded-md text-text bg-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 text-sm transition-all"
           :class="{'border-accent-red': form.errors.email}"
         />
         <label
@@ -82,7 +82,7 @@ const submit = () => {
           required
           autocomplete="current-password"
           placeholder=" "
-          class="peer h-12 pt-5 pb-1 px-3.5 pr-10 block w-full border border-border rounded-md text-text bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 text-sm transition-all"
+          class="peer h-12 pt-5 pb-1 px-3.5 pr-10 block w-full border border-border rounded-md text-text bg-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 text-sm transition-all"
           :class="{'border-accent-red': form.errors.password}"
         />
         <label

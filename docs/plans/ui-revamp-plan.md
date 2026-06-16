@@ -1,221 +1,97 @@
-# UI Revamp Implementation Plan
+# FocusFlow UI Revamp Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Overhaul the FocusFlow UI/UX to transform it from a generic layout into a craft-driven, premium product interface with distinct character, custom scrollbars, cohesive typography, and refined micro-interactions.
+**Goal:** Revamp the FocusFlow UI to look like a premium, craft-driven SaaS product with distinct dark/light mode, smooth transitions, custom scrollbars, and high-fidelity page components.
 
-**Architecture:** We will maintain the Laravel 11, Inertia.js, and Vue 3 tech stack. Visual styling will be implemented using Vanilla CSS (extended utilities/tokens inside global stylesheet) and customized Tailwind utility classes without altering backend routes, controllers, or database schemas.
+**Architecture:** We will implement CSS variables in resources/css/app.css for theme-aware tokens (bg-surface, text-text, etc.) and bind the active state to the `.dark` class toggled on the root document. The app shell, authentication pages, dashboard, and kanban board will be refactored to consume these design system tokens and showcase premium details (e.g. gradients, floating labels, timeline items, responsive columns, and avatar groups).
 
-**Tech Stack:** Laravel 11 · Inertia.js · Vue 3 · Tailwind CSS · Lucide icons
+**Tech Stack:** Vue 3, Inertia.js, Tailwind CSS v4, Lucide Vue Icons, Vue Draggable Plus.
 
 ---
 
-### Task 1: Global CSS Foundation Overhaul
-
+### Task 1: CSS Theme System & Utilities
 **Files:**
-- Modify: `resources/css/app.css`
+- Modify: [app.css](file:///home/visionmc/projects/focusflow/resources/css/app.css)
+- Create: [useTheme.js](file:///home/visionmc/projects/focusflow/resources/js/Composables/useTheme.js)
+- Modify: [app.blade.php](file:///home/visionmc/projects/focusflow/resources/views/app.blade.php)
 
-**Step 1: Write Custom Scrollbar and Typography Classes**
-We will add standard scrollbar styling (6px wide, transparent track, light gray rounded thumb, primary tint on hover), Plus Jakarta Sans display font styles, JetBrains Mono font utilities, and smooth page transition base definitions.
-
-```css
-/* Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #6366F1;
-}
-
-/* Typography Sizing System */
-.font-display-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 1.5rem; /* 24px */
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.text-micro-mono {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6875rem; /* 11px */
-  color: #94A3B8;
-}
-
-.label-uppercase-tracked {
-  font-size: 0.6875rem; /* 11px */
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  color: #475569;
-}
-```
-
-**Step 2: Verify and Commit**
-Verify that the CSS builds correctly.
-Run: `pnpm run build`
-Expected: Builds with zero errors.
-
-Commit:
-```bash
-git add resources/css/app.css
-git commit -m "style: revamp global css with scrollbars, typography, and focus states"
-```
+**Step 1: Set up CSS variables for Light and Dark themes**
+Define standard theme variables under `:root` and `.dark` selectors inside resources/css/app.css. Support scrollbars, typography scales, active borders, and focus rings. Prevent light/dark flashing by injecting a tiny blocker script in app.blade.php.
+**Step 2: Create a Vue theme composable**
+Implement a composable that exposes the active theme ('light' | 'dark'), a toggle function, and initializes theme preference in localStorage.
 
 ---
 
 ### Task 2: Auth Pages Overhaul
-
 **Files:**
-- Modify: `resources/js/Layouts/GuestLayout.vue`
-- Modify: `resources/js/Pages/Auth/Login.vue`
-- Modify: `resources/js/Pages/Auth/Register.vue`
+- Modify: [GuestLayout.vue](file:///home/visionmc/projects/focusflow/resources/js/Layouts/GuestLayout.vue)
+- Modify: [Login.vue](file:///home/visionmc/projects/focusflow/resources/js/Pages/Auth/Login.vue)
+- Modify: [Register.vue](file:///home/visionmc/projects/focusflow/resources/js/Pages/Auth/Register.vue)
 
-**Step 1: Design Premium Left Panel in GuestLayout**
-Replace the flat indigo left panel with a deep dark background (`#0F0F1A`), offset radial gradients, blurred geometric shapes, and a high-craft tagline section including a designer-grade quote or detail.
-
-**Step 2: Customize Input Floating Labels and Shimmer Submit Buttons**
-Enhance input fields in `Login.vue` and `Register.vue` to have smooth transition border colors and input focus. Add a subtle hover shimmer animation to the submit button with absolute width to avoid shifting layout on loading state.
-
-**Step 3: Verify and Commit**
-Run: `pnpm run build`
-Expected: Success.
-
-Commit:
-```bash
-git add resources/js/Layouts/GuestLayout.vue resources/js/Pages/Auth/Login.vue resources/js/Pages/Auth/Register.vue
-git commit -m "ui: revamp auth guest layout, login, and registration pages"
-```
+**Step 1: Revamp GuestLayout**
+Left pane: Dark slate base (#0f172a / #020617) with layered radial gradients, floating/rotated geometric boxes, and testimonials/quotes. Right pane: Smooth surface, styled form card container, and responsive spacing.
+**Step 2: Revamp Login & Register forms**
+Floating input labels that translate smoothly up on focus or text presence. Submit buttons with hover shimmer, scaling transition, and loading spinner animation.
 
 ---
 
-### Task 3: App Shell & Navigation Overhaul
-
+### Task 3: App Shell & Navigation (Sidebar, Navbar, Theme Toggle)
 **Files:**
-- Modify: `resources/js/Components/AppSidebar.vue`
-- Modify: `resources/js/Components/AppNavbar.vue`
+- Modify: [AppSidebar.vue](file:///home/visionmc/projects/focusflow/resources/js/Components/AppSidebar.vue)
+- Modify: [AppNavbar.vue](file:///home/visionmc/projects/focusflow/resources/js/Components/AppNavbar.vue)
+- Modify: [AuthenticatedLayout.vue](file:///home/visionmc/projects/focusflow/resources/js/Layouts/AuthenticatedLayout.vue)
 
-**Step 1: Signature Sidebar Styling**
-Add top-to-bottom subtle gradient sidebar background. Adjust active nav item to have a 3-4px solid primary left border and background bleed. Style workspace icon box-shadow glow. Integrate projects section with small accent colored dots. Place user info in a dark panel zone at the bottom. Implement smooth width collapse toggle.
-
-**Step 2: Navbar Polish**
-Add border-b hairline and sticky headers. Enhance avatar and notification button hover states.
-
-**Step 3: Verify and Commit**
-Run: `pnpm run build`
-Expected: Success.
-
-Commit:
-```bash
-git add resources/js/Components/AppSidebar.vue resources/js/Components/AppNavbar.vue
-git commit -m "ui: implement signature sidebar and navbar visual design"
-```
+**Step 1: AppSidebar Revamp**
+- Background: subtle gradient top-to-bottom.
+- Active items: 3px solid primary border and bleeding highlight background.
+- Project dots: small custom color badges.
+- User area: dark card block at the bottom.
+- Hover states: transition background 150ms.
+**Step 2: AppNavbar Theme Switcher**
+Insert a theme switch toggle button in the navbar (Sun/Moon icons) connected to our useTheme composable. Keep the navbar blur styling robust.
 
 ---
 
-### Task 4: Dashboard Page Revamp
-
+### Task 4: Dashboard Revamp
 **Files:**
-- Modify: `resources/js/Pages/Dashboard.vue`
+- Modify: [Dashboard.vue](file:///home/visionmc/projects/focusflow/resources/js/Pages/Dashboard.vue)
 
-**Step 1: Unbalance Stat Cards & Micro-typography**
-Make the "Total Tasks" card display size larger. Use display typography for numbers (~36px) and upper-case tracking for labels (11px). Add subtle divider lines. Implement timeline recent activity section.
-
-**Step 2: Verify and Commit**
-Run: `pnpm run build`
-Expected: Success.
-
-Commit:
-```bash
-git add resources/js/Pages/Dashboard.vue
-git commit -m "ui: revamp dashboard stats cards and timeline list"
-```
+**Step 1: Unbalanced Stats Grid**
+- First stat (Total Tasks) is double the width (spans 2), features larger font-display size, and distinct accent background.
+- Other stats (In Progress, Completed Today) are simple balanced cards.
+**Step 2: Activity Timeline**
+Redesign the list of recent tasks using a left timeline border with colored status indicators (backlog, in progress, review, done). Remove any table borders.
 
 ---
 
-### Task 5: Kanban Board, Columns, and Task Cards
-
+### Task 5: Kanban Board & Task Cards
 **Files:**
-- Modify: `resources/js/Pages/Projects/Kanban.vue`
-- Modify: `resources/js/Components/KanbanBoard.vue`
-- Modify: `resources/js/Components/KanbanColumn.vue`
-- Modify: `resources/js/Components/TaskCard.vue`
+- Modify: [Kanban.vue](file:///home/visionmc/projects/focusflow/resources/js/Pages/Projects/Kanban.vue)
+- Modify: [KanbanBoard.vue](file:///home/visionmc/projects/focusflow/resources/js/Components/KanbanBoard.vue)
+- Modify: [KanbanColumn.vue](file:///home/visionmc/projects/focusflow/resources/js/Components/KanbanColumn.vue)
+- Modify: [TaskCard.vue](file:///home/visionmc/projects/focusflow/resources/js/Components/TaskCard.vue)
 
-**Step 1: Style Task Cards with Priority Borders and Hover Lifting**
-Modify `TaskCard.vue` to include a 4px left-border colored by task priority (high: red, medium: yellow, low: green/blue). Add subtle transform scale/lift on hover (`translate-y-[-2px] hover:shadow-md`) and cursor grabbing state. Update assignee initials to overlap.
-
-**Step 2: Style Columns with Alternating Tints and Droppable Dashed States**
-In `KanbanColumn.vue`, style status headers to stay sticky. Give column backgrounds a barely noticeable status tint. Define visible dashed border lines when dragging tasks over columns. Implement dashed add task buttons.
-
-**Step 3: Verify and Commit**
-Run: `pnpm run build`
-Expected: Success.
-
-Commit:
-```bash
-git add resources/js/Pages/Projects/Kanban.vue resources/js/Components/KanbanBoard.vue resources/js/Components/KanbanColumn.vue resources/js/Components/TaskCard.vue
-git commit -m "ui: upgrade kanban board columns, headers, and task cards"
-```
+**Step 1: TaskCard Polish**
+- 4px left-border reflecting priority (High: red, Medium: yellow, Low: green).
+- Overdue warnings in styled capsule pill badges.
+- Overlapping user initials avatar group with white ring spacers.
+- Lift transitions on hover.
+**Step 2: KanbanColumn Tints & Drop Zones**
+- Alternating subtle tints per column status.
+- Dashed drop insertion lines when a card is dragged over.
+- Sticky column headers so they don't scroll away.
 
 ---
 
-### Task 6: Task Modal Details and Comments
-
+### Task 6: Verification & Compilation
 **Files:**
-- Modify: `resources/js/Components/TaskModal.vue`
+- Verify: [Dashboard.vue](file:///home/visionmc/projects/focusflow/resources/js/Pages/Dashboard.vue)
+- Verify: [Kanban.vue](file:///home/visionmc/projects/focusflow/resources/js/Pages/Projects/Kanban.vue)
 
-**Step 1: Sheet Transition and Visual Improvements**
-Refine task details sheet spacing, auto-save spinner, priority dropdowns, and comment log layout. Make details header and input fields appear premium.
-
-**Step 2: Verify and Commit**
-Run: `pnpm run build`
-Expected: Success.
-
-Commit:
-```bash
-git add resources/js/Components/TaskModal.vue
-git commit -m "ui: polish task edit sheet details and comments layout"
-```
-
----
-
-### Task 7: Empty States & Notification Bell Dropdown
-
-**Files:**
-- Modify: `resources/js/Components/NotificationBell.vue`
-
-**Step 1: Notification Dropdown & Badge Design**
-Make badge count use primary color (indigo) instead of red, pulsing when count > 0. Refine the list styles and header/unread states. Add geometric SVG to the empty state of notifications.
-
-**Step 2: Verify and Commit**
-Run: `pnpm run build`
-Expected: Success.
-
-Commit:
-```bash
-git add resources/js/Components/NotificationBell.vue
-git commit -m "ui: design premium notifications bell, badge pulse, and dropdown list"
-```
-
----
-
-### Task 8: Verification, Test Suite, and Audit
-
-**Files:**
-- Run verification command line checks, tests, build checks.
-
-**Step 1: Verify all tests and code linting**
-Run: `php artisan test`
-Expected: All Pest tests pass.
-Run: `pnpm run build`
-Expected: Front-end production assets build perfectly.
-
-**Step 2: Clean up and audit using pre-push check**
-Run final pre-push codebase audit to clean up debug snippets, junk imports, or formatting inconsistencies.
+**Step 1: Adjust Skeleton Loaders**
+- Ensure all loading placeholders (Dashboard skeletons, Kanban skeletons, Notification bell skeleton) use theme-aware classes (e.g. `bg-surface-3/50` or `bg-slate-800/40` in dark mode) to completely prevent white flashes during initial mount.
+**Step 2: Compile assets**
+- Run `pnpm run build` to verify webpack/vite compiles with zero errors.
+**Step 3: Run backend feature tests**
+- Run `php artisan test` to verify no routes, middlewares, or controllers were broken.
