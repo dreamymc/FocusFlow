@@ -49,7 +49,7 @@ const submit = () => {
     <form @submit.prevent="submit" class="space-y-4">
       <!-- Email Address -->
       <div class="relative w-full">
-        <Input
+        <input
           id="email"
           type="email"
           v-model="form.email"
@@ -57,17 +57,17 @@ const submit = () => {
           autofocus
           autocomplete="username"
           placeholder=" "
-          class="peer h-12 pt-5 pb-1 px-3.5 block w-full border-border rounded-md text-text focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+          class="peer h-12 pt-5 pb-1 px-3.5 block w-full border border-border rounded-md text-text bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 text-sm transition-all"
           :class="{'border-accent-red': form.errors.email}"
         />
-        <Label
+        <label
           for="email"
           class="absolute left-3.5 top-1.5 text-[10px] text-text-muted transition-all duration-200 pointer-events-none origin-[0]
                  peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-text-muted
-                 peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:text-primary"
+                 peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:text-primary font-medium"
         >
           Email address
-        </Label>
+        </label>
         <p v-if="form.errors.email" class="text-accent-red text-xs mt-1">
           {{ form.errors.email }}
         </p>
@@ -75,24 +75,24 @@ const submit = () => {
 
       <!-- Password -->
       <div class="relative w-full">
-        <Input
+        <input
           id="password"
           :type="showPassword ? 'text' : 'password'"
           v-model="form.password"
           required
           autocomplete="current-password"
           placeholder=" "
-          class="peer h-12 pt-5 pb-1 px-3.5 pr-10 block w-full border-border rounded-md text-text focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+          class="peer h-12 pt-5 pb-1 px-3.5 pr-10 block w-full border border-border rounded-md text-text bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 text-sm transition-all"
           :class="{'border-accent-red': form.errors.password}"
         />
-        <Label
+        <label
           for="password"
           class="absolute left-3.5 top-1.5 text-[10px] text-text-muted transition-all duration-200 pointer-events-none origin-[0]
                  peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-text-muted
-                 peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:text-primary"
+                 peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:text-primary font-medium"
         >
           Password
-        </Label>
+        </label>
         <button
           type="button"
           class="absolute top-1/2 -translate-y-1/2 right-0 flex items-center pr-3.5 text-text-secondary hover:text-text transition"
