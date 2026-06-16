@@ -3,7 +3,7 @@
         <!-- Notification Trigger Button -->
         <button
             @click="toggleDropdown"
-            class="relative p-2 rounded-lg text-text-secondary hover:text-text hover:bg-slate-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:scale-95 transition-all duration-200 cursor-pointer bell-jiggle"
+            class="relative p-2 rounded-lg text-text-secondary hover:text-text hover:bg-slate-100/80 dark:hover:bg-slate-800/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:scale-95 transition-all duration-200 cursor-pointer bell-jiggle"
             aria-label="Notifications"
         >
             <svg
@@ -111,7 +111,7 @@
                     <li
                         v-for="(notification, index) in notifications"
                         :key="index"
-                        class="group px-4 py-3 hover:bg-slate-50/70 transition-all duration-200 ease-out flex gap-3 align-top cursor-default"
+                        class="group px-4 py-3 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-all duration-200 ease-out flex gap-3 align-top cursor-default"
                     >
                         <!-- Event-Specific Icon -->
                         <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center self-start transform group-hover:scale-105 transition-transform duration-200" :class="getIconBgClass(notification.type)">
