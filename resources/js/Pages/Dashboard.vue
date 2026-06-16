@@ -216,14 +216,13 @@ const getStatusBadgeClass = (status) => {
           >
             <!-- Timeline Bullet -->
             <div 
-              class="absolute -left-[33px] w-4 h-4 rounded-full bg-surface border-2 flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 z-10"
+              class="absolute -left-[33px] w-4 h-4 rounded-full bg-surface border-2 flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 z-10 group/bullet"
               :class="{
                 'border-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.2)]': task.status === 'done',
                 'border-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.2)]': task.status === 'in_progress',
                 'border-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.2)]': task.status === 'in_review',
                 'border-text-muted': task.status === 'backlog'
               }"
-              :title="task.status_label"
             >
               <div 
                 class="w-1.5 h-1.5 rounded-full animate-pulse"
@@ -233,8 +232,12 @@ const getStatusBadgeClass = (status) => {
                   'bg-amber-500': task.status === 'in_review',
                   'bg-text-muted': task.status === 'backlog'
                 }"
-                :title="task.status_label"
               ></div>
+
+              <!-- Custom Instant CSS Tooltip -->
+              <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-0.5 bg-surface-3 border border-border text-[9px] font-bold text-text-secondary rounded shadow-sm opacity-0 scale-95 pointer-events-none group-hover/bullet:opacity-100 group-hover/bullet:scale-100 transition-all duration-150 origin-bottom z-50 whitespace-nowrap tracking-wide uppercase select-none">
+                {{ task.status_label }}
+              </span>
             </div>
 
             <!-- Task Info -->
