@@ -223,6 +223,7 @@ const getStatusBadgeClass = (status) => {
                 'border-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.2)]': task.status === 'in_review',
                 'border-text-muted': task.status === 'backlog'
               }"
+              :title="task.status_label"
             >
               <div 
                 class="w-1.5 h-1.5 rounded-full animate-pulse"
@@ -232,6 +233,7 @@ const getStatusBadgeClass = (status) => {
                   'bg-amber-500': task.status === 'in_review',
                   'bg-text-muted': task.status === 'backlog'
                 }"
+                :title="task.status_label"
               ></div>
             </div>
 
