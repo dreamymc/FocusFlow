@@ -103,20 +103,49 @@ const getCookie = (name) => {
   return null;
 };
 
+// Dropdown States for Multiple Assignees Selection
+const showAssigneeDropdown = ref(false);
+const showCreateAssigneeDropdown = ref(false);
+
+const getMemberName = (id) => {
+  const member = props.members.find(m => m.id === id);
+  return member ? member.name : 'Unknown';
+};
+
+const toggleAssignee = (memberId) => {
+  if (props.mode === 'create') {
+    const idx = createForm.value.assigneeIds.indexOf(memberId);
+    if (idx > -1) {
+      createForm.value.assigneeIds.splice(idx, 1);
+    } else {
+      createForm.value.assigneeIds.push(memberId);
+    }
+  } else {
+    const idx = editForm.value.assigneeIds.indexOf(memberId);
+    if (idx > -1) {
+      editForm.value.assigneeIds.splice(idx, 1);
+    } else {
+      editForm.value.assigneeIds.push(memberId);
+    }
+  }
+};
+
 // Forms
-const createForm = ref({ title: '', description: '', status: props.initialStatus, priority: 'low', assigneeId: null });
-const editForm = ref({ title: '', description: '', status: 'backlog', priority: 'low', assigneeId: null });
+const createForm = ref({ title: '', description: '', status: props.initialStatus, priority: 'low', assigneeIds: [] });
+const editForm = ref({ title: '', description: '', status: 'backlog', priority: 'low', assigneeIds: [] });
 
 const initForms = () => {
+  showAssigneeDropdown.value = false;
+  showCreateAssigneeDropdown.value = false;
   if (props.mode === 'create') {
-    createForm.value = { title: '', description: '', status: props.initialStatus, priority: 'low', assigneeId: null };
+    createForm.value = { title: '', description: '', status: props.initialStatus, priority: 'low', assigneeIds: [] };
   } else if (props.task) {
     editForm.value = {
       title: props.task.title || '',
       description: props.task.description || '',
       status: props.task.status?.value || props.task.status || 'backlog',
       priority: props.task.priority?.value || props.task.priority || 'low',
-      assigneeId: props.task.assignees?.length > 0 ? props.task.assignees[0].id : null,
+      assigneeIds: props.task.assignees ? props.task.assignees.map(a => a.id) : [],
     };
     saveStatus.value = '';
     showDeleteConfirm.value = false;
@@ -125,16 +154,17 @@ const initForms = () => {
 
 const isFormDirty = computed(() => {
   if (!props.task) return false;
-  const currentAssigneeId = props.task.assignees?.length > 0 ? props.task.assignees[0].id : null;
+  const currentAssigneeIds = props.task.assignees ? props.task.assignees.map(a => a.id).sort() : [];
   const currentStatus = props.task.status?.value || props.task.status || 'backlog';
   const currentPriority = props.task.priority?.value || props.task.priority || 'low';
-  const a1 = editForm.value.assigneeId ? Number(editForm.value.assigneeId) : null;
-  const a2 = currentAssigneeId ? Number(currentAssigneeId) : null;
+  const formAssigneeIds = [...editForm.value.assigneeIds].sort();
+  const assigneesChanged = JSON.stringify(formAssigneeIds) !== JSON.stringify(currentAssigneeIds);
+
   return editForm.value.title !== (props.task.title || '') ||
     editForm.value.description !== (props.task.description || '') ||
     editForm.value.status !== currentStatus ||
     editForm.value.priority !== currentPriority ||
-    a1 !== a2;
+    assigneesChanged;
 });
 
 let lastTaskId = null;
@@ -194,7 +224,7 @@ const performAutoSave = async () => {
         description: editForm.value.description,
         status: editForm.value.status,
         priority: editForm.value.priority,
-        assignee_ids: editForm.value.assigneeId ? [Number(editForm.value.assigneeId)] : [],
+        assignee_ids: editForm.value.assigneeIds.map(Number),
       }),
     });
     if (!response.ok) throw new Error();
@@ -221,7 +251,7 @@ const handleClose = () => {
   emit('close');
 };
 
-watch(() => [editForm.value.title, editForm.value.description, editForm.value.status, editForm.value.priority, editForm.value.assigneeId], () => {
+watch(() => [editForm.value.title, editForm.value.description, editForm.value.status, editForm.value.priority, editForm.value.assigneeIds], () => {
   if (props.mode === 'view' && props.task && !readOnly.value && isFormDirty.value) {
     triggerAutoSave();
   }
@@ -242,7 +272,7 @@ const submitCreate = async () => {
         description: createForm.value.description,
         status: createForm.value.status,
         priority: createForm.value.priority,
-        assignee_ids: createForm.value.assigneeId ? [Number(createForm.value.assigneeId)] : [],
+        assignee_ids: createForm.value.assigneeIds.map(Number),
       }),
     });
     if (!response.ok) throw new Error();
@@ -435,14 +465,71 @@ const statusDotClass = (val) => ({
                     </div>
                   </div>
 
-                  <div class="space-y-1.5">
-                    <label for="task-assignee" class="label-uppercase-tracked block">Assignee</label>
-                    <div class="relative">
-                      <select id="task-assignee" v-model="createForm.assigneeId" class="task-select" :disabled="isSaving">
-                        <option :value="null">Unassigned</option>
-                        <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
-                      </select>
-                      <div class="select-chevron"><svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+                  <div class="space-y-1.5 relative">
+                    <label class="label-uppercase-tracked block">Assignees</label>
+                    <div>
+                      <button
+                        type="button"
+                        @click="showCreateAssigneeDropdown = !showCreateAssigneeDropdown"
+                        class="task-select w-full flex items-center justify-between text-left cursor-pointer"
+                        :disabled="isSaving"
+                      >
+                        <div class="flex items-center gap-1.5 overflow-hidden">
+                          <template v-if="createForm.assigneeIds.length > 0">
+                            <div class="flex -space-x-1 items-center mr-1">
+                              <div
+                                v-for="memberId in createForm.assigneeIds"
+                                :key="memberId"
+                                class="w-5.5 h-5.5 rounded-full bg-surface-3 text-text-secondary flex items-center justify-center font-semibold text-[8px] border-2 border-surface shrink-0"
+                                :title="getMemberName(memberId)"
+                              >
+                                {{ getInitials(getMemberName(memberId)) }}
+                              </div>
+                            </div>
+                            <span class="text-xs text-text truncate">
+                              {{ createForm.assigneeIds.map(getMemberName).join(', ') }}
+                            </span>
+                          </template>
+                          <span v-else class="text-xs text-text-muted">Unassigned</span>
+                        </div>
+                        <svg class="h-4 w-4 text-text-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+
+                      <div
+                        v-if="showCreateAssigneeDropdown"
+                        class="fixed inset-0 z-30"
+                        @click="showCreateAssigneeDropdown = false"
+                      ></div>
+
+                      <div
+                        v-if="showCreateAssigneeDropdown"
+                        class="absolute left-0 right-0 mt-1.5 bg-surface-2 border border-border rounded-xl shadow-lg p-2 z-40 max-h-56 overflow-y-auto space-y-0.5"
+                      >
+                        <button
+                          v-for="member in members"
+                          :key="member.id"
+                          type="button"
+                          @click="toggleAssignee(member.id)"
+                          class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left text-xs font-medium text-text hover:bg-surface-3 transition-colors cursor-pointer"
+                        >
+                          <div class="flex items-center gap-2">
+                            <div class="w-5.5 h-5.5 rounded-full bg-surface text-text-secondary flex items-center justify-center font-semibold text-[8px]">
+                              {{ getInitials(member.name) }}
+                            </div>
+                            <span>{{ member.name }}</span>
+                          </div>
+                          <div class="w-4 h-4 rounded border border-border-strong flex items-center justify-center transition-colors" :class="createForm.assigneeIds.includes(member.id) ? 'bg-primary border-primary' : ''">
+                            <svg v-if="createForm.assigneeIds.includes(member.id)" class="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        </button>
+                        <div v-if="members.length === 0" class="text-center py-3 text-xs text-text-muted">
+                          No members in workspace
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -602,14 +689,71 @@ const statusDotClass = (val) => ({
                         </div>
                       </div>
 
-                      <div class="space-y-1.5">
-                        <label for="edit-assignee" class="label-uppercase-tracked block">Assignee</label>
-                        <div class="relative">
-                          <select id="edit-assignee" v-model="editForm.assigneeId" class="task-select" :disabled="readOnly">
-                            <option :value="null">Unassigned</option>
-                            <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
-                          </select>
-                          <div class="select-chevron"><svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+                      <div class="space-y-1.5 relative">
+                        <label class="label-uppercase-tracked block">Assignees</label>
+                        <div>
+                          <button
+                            type="button"
+                            @click="showAssigneeDropdown = !showAssigneeDropdown"
+                            class="task-select w-full flex items-center justify-between text-left cursor-pointer"
+                            :disabled="readOnly"
+                          >
+                            <div class="flex items-center gap-1.5 overflow-hidden">
+                              <template v-if="editForm.assigneeIds.length > 0">
+                                <div class="flex -space-x-1 items-center mr-1">
+                                  <div
+                                    v-for="memberId in editForm.assigneeIds"
+                                    :key="memberId"
+                                    class="w-5.5 h-5.5 rounded-full bg-surface-3 text-text-secondary flex items-center justify-center font-semibold text-[8px] border-2 border-surface shrink-0"
+                                    :title="getMemberName(memberId)"
+                                  >
+                                    {{ getInitials(getMemberName(memberId)) }}
+                                  </div>
+                                </div>
+                                <span class="text-xs text-text truncate">
+                                  {{ editForm.assigneeIds.map(getMemberName).join(', ') }}
+                                </span>
+                              </template>
+                              <span v-else class="text-xs text-text-muted">Unassigned</span>
+                            </div>
+                            <svg class="h-4 w-4 text-text-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+
+                          <div
+                            v-if="showAssigneeDropdown"
+                            class="fixed inset-0 z-30"
+                            @click="showAssigneeDropdown = false"
+                          ></div>
+
+                          <div
+                            v-if="showAssigneeDropdown"
+                            class="absolute left-0 right-0 mt-1.5 bg-surface-2 border border-border rounded-xl shadow-lg p-2 z-40 max-h-56 overflow-y-auto space-y-0.5"
+                          >
+                            <button
+                              v-for="member in members"
+                              :key="member.id"
+                              type="button"
+                              @click="toggleAssignee(member.id)"
+                              class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left text-xs font-medium text-text hover:bg-surface-3 transition-colors cursor-pointer"
+                            >
+                              <div class="flex items-center gap-2">
+                                <div class="w-5.5 h-5.5 rounded-full bg-surface text-text-secondary flex items-center justify-center font-semibold text-[8px]">
+                                  {{ getInitials(member.name) }}
+                                </div>
+                                <span>{{ member.name }}</span>
+                              </div>
+                              <div class="w-4 h-4 rounded border border-border-strong flex items-center justify-center transition-colors" :class="editForm.assigneeIds.includes(member.id) ? 'bg-primary border-primary' : ''">
+                                <svg v-if="editForm.assigneeIds.includes(member.id)" class="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                            </button>
+                            <div v-if="members.length === 0" class="text-center py-3 text-xs text-text-muted">
+                              No members in workspace
+                            </div>
+                          </div>
                         </div>
                       </div>
 
