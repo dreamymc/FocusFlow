@@ -39,8 +39,25 @@ const getStatusBadgeClass = (status) => {
   <AuthenticatedLayout title="Dashboard">
     <!-- Loading Skeletons -->
     <div v-if="isLoading" class="space-y-8 animate-pulse">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div v-for="i in 3" :key="i" class="bg-surface border border-border rounded-xl p-6 flex items-center justify-between shadow-sm">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Card: Total Tasks Skeleton (spans 2) -->
+        <div class="md:col-span-2 bg-surface border border-border rounded-2xl p-8 flex items-center justify-between shadow-sm">
+          <div class="space-y-3 flex-1">
+            <div class="h-3 bg-slate-200 rounded w-1/4"></div>
+            <div class="h-10 bg-slate-200 rounded w-1/5"></div>
+          </div>
+          <div class="w-14 h-14 bg-slate-200 rounded-xl"></div>
+        </div>
+        <!-- Card: In Progress Skeleton (spans 1) -->
+        <div class="md:col-span-1 bg-surface border border-border rounded-2xl p-6 flex items-center justify-between shadow-sm">
+          <div class="space-y-2 flex-1">
+            <div class="h-3 bg-slate-200 rounded w-1/3"></div>
+            <div class="h-8 bg-slate-200 rounded w-1/4"></div>
+          </div>
+          <div class="w-12 h-12 bg-slate-200 rounded-lg"></div>
+        </div>
+        <!-- Card: Completed Today Skeleton (spans 1) -->
+        <div class="md:col-span-1 bg-surface border border-border rounded-2xl p-6 flex items-center justify-between shadow-sm">
           <div class="space-y-2 flex-1">
             <div class="h-3 bg-slate-200 rounded w-1/3"></div>
             <div class="h-8 bg-slate-200 rounded w-1/4"></div>
@@ -48,49 +65,97 @@ const getStatusBadgeClass = (status) => {
           <div class="w-12 h-12 bg-slate-200 rounded-lg"></div>
         </div>
       </div>
-      <div class="bg-surface border border-border rounded-xl p-6 space-y-4 shadow-sm">
-        <div class="h-4 bg-slate-200 rounded w-1/4 mb-4"></div>
-        <div v-for="i in 4" :key="i" class="py-3.5 flex items-center justify-between border-b border-slate-100 last:border-0">
-          <div class="space-y-2 flex-1">
-            <div class="h-4 bg-slate-200 rounded w-1/3"></div>
-            <div class="h-3 bg-slate-200 rounded w-1/6"></div>
+      
+      <!-- Recent Activity Skeleton -->
+      <div class="bg-surface border border-border rounded-2xl p-8 space-y-6 shadow-sm">
+        <div class="space-y-2 mb-4">
+          <div class="h-4 bg-slate-200 rounded w-1/4"></div>
+          <div class="h-3 bg-slate-200 rounded w-1/3"></div>
+        </div>
+        <div class="relative pl-6 ml-4 border-l-2 border-slate-100 space-y-6 py-2">
+          <div v-for="i in 4" :key="i" class="relative flex items-center justify-between py-1">
+            <div class="absolute -left-[33px] w-4 h-4 rounded-full bg-slate-200 border-2 border-surface flex items-center justify-center"></div>
+            <div class="space-y-2 flex-1">
+              <div class="h-4 bg-slate-200 rounded w-1/3"></div>
+              <div class="h-3 bg-slate-200 rounded w-1/6"></div>
+            </div>
+            <div class="w-16 h-6 bg-slate-200 rounded-full"></div>
           </div>
-          <div class="w-16 h-6 bg-slate-200 rounded-full"></div>
         </div>
       </div>
     </div>
 
     <!-- Empty State: No Workspace -->
-    <div v-else-if="!currentWorkspace" class="flex flex-col items-center justify-center min-h-[60vh] bg-surface border border-border rounded-xl p-8 text-center shadow-sm max-w-2xl mx-auto">
-      <div class="w-16 h-16 bg-primary-light rounded-full flex items-center justify-center text-primary mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.97 5.97 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+    <div v-else-if="!currentWorkspace" class="flex flex-col items-center justify-center min-h-[65vh] bg-surface/60 backdrop-blur-md border border-border/80 rounded-2xl p-12 text-center shadow-lg max-w-2xl mx-auto my-4 transition-all duration-300">
+      <!-- Custom elegant SVG line-art -->
+      <div class="relative mb-8 group">
+        <!-- Soft background glow -->
+        <div class="absolute inset-0 bg-primary/5 blur-3xl rounded-full scale-150"></div>
+        <svg class="relative w-48 h-48 mx-auto text-primary transition-transform duration-700 group-hover:scale-105" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer orbital path -->
+          <circle cx="100" cy="100" r="85" stroke="url(#gradient-geometric)" stroke-width="1.5" stroke-dasharray="6 6" class="opacity-30" />
+          <!-- Inner orbital path -->
+          <circle cx="100" cy="100" r="65" stroke="url(#gradient-geometric)" stroke-width="1" class="opacity-40" />
+          
+          <!-- Central dynamic workspaces structure -->
+          <rect x="75" y="75" width="50" height="50" rx="14" stroke="currentColor" stroke-width="2" class="opacity-95 shadow-sm" />
+          
+          <!-- Connected nodes -->
+          <rect x="40" y="45" width="36" height="36" rx="10" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" class="opacity-60" />
+          <rect x="124" y="119" width="36" height="36" rx="10" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" class="opacity-60" />
+          
+          <!-- Flow lines -->
+          <path d="M75 100H58C53 100 49 96 49 91V81" stroke="url(#gradient-geometric)" stroke-width="1.5" stroke-linecap="round" class="opacity-70" />
+          <path d="M125 100H142C147 100 151 104 151 109V119" stroke="url(#gradient-geometric)" stroke-width="1.5" stroke-linecap="round" class="opacity-70" />
+          
+          <!-- Colored Accent Orbs -->
+          <circle cx="49" cy="81" r="4" fill="#8B5CF6" class="animate-pulse" />
+          <circle cx="151" cy="109" r="4" fill="#8B5CF6" class="animate-pulse" />
+          <circle cx="100" cy="100" r="3" fill="#6366F1" />
+          
+          <!-- Tech grid ticks -->
+          <line x1="100" y1="15" x2="100" y2="25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="opacity-40" />
+          <line x1="100" y1="175" x2="100" y2="185" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="opacity-40" />
+          <line x1="15" y1="100" x2="25" y2="100" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="opacity-40" />
+          <line x1="175" y1="100" x2="185" y2="100" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="opacity-40" />
+
+          <defs>
+            <linearGradient id="gradient-geometric" x1="15" y1="15" x2="185" y2="185" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6366F1" />
+              <stop offset="1" stop-color="#8B5CF6" />
+            </linearGradient>
+          </defs>
         </svg>
       </div>
-      <h2 class="text-xl font-display font-bold text-text mb-2">Create your first Workspace</h2>
-      <p class="text-text-secondary text-sm max-w-sm mb-8 leading-relaxed">
-        Workspaces are where your team collaborates on tasks and projects. Create one to get started.
+      
+      <h2 class="font-display-title text-text mb-3 tracking-tight">Create your first Workspace</h2>
+      <p class="text-text-secondary text-sm max-w-md mb-8 leading-relaxed">
+        Workspaces are the collaborative hubs of FocusFlow. Team members, tasks, and project timelines all live here. Create one to begin your productivity flow.
       </p>
+      
       <Link
         href="/workspaces/create"
-        class="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-semibold px-6 py-2.5 rounded-lg shadow-sm hover:shadow transition-all cursor-pointer text-sm"
+        class="shimmer-btn inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-semibold px-8 py-3 rounded-lg shadow-lg shadow-primary/25 hover:shadow-primary/30 active:scale-95 transition-all cursor-pointer text-sm tracking-wide gap-2 border border-primary-dark"
       >
-        Create Workspace
+        <span>Create Workspace</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
       </Link>
     </div>
 
     <!-- Main Dashboard Content -->
     <div v-else class="space-y-8 animate-fade-in">
       <!-- Metric Cards Row -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <!-- Card: Total Tasks -->
-        <div class="bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
-          <div class="space-y-1">
-            <span class="text-xs font-bold text-text-secondary uppercase tracking-wider">Total Tasks</span>
-            <p class="text-3xl font-display font-extrabold text-text leading-none">{{ stats?.totalTasks ?? 0 }}</p>
+        <div class="md:col-span-2 bg-gradient-to-br from-surface to-primary-light/20 border border-primary/20 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex items-center justify-between group">
+          <div class="space-y-2">
+            <span class="label-uppercase-tracked block">Total Tasks</span>
+            <p class="text-4xl font-display font-extrabold text-text leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.totalTasks ?? 0 }}</p>
           </div>
-          <div class="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+          <div class="w-14 h-14 bg-primary-light border border-primary/20 rounded-xl flex items-center justify-center text-primary shadow-sm shadow-primary/10 transition-transform duration-300 group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.375c1.08 0 1.958-.87 1.958-1.958V13.5m-6.75-2.25H12a1.875 1.875 0 0 0 0-3.75H9v3.75Z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5A3.375 3.375 0 0 0 10.125 2.25H3.75A1.125 1.125 0 0 0 2.625 3.375v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V14.25Z" />
             </svg>
@@ -98,12 +163,12 @@ const getStatusBadgeClass = (status) => {
         </div>
 
         <!-- Card: In Progress -->
-        <div class="bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
-          <div class="space-y-1">
-            <span class="text-xs font-bold text-text-secondary uppercase tracking-wider">In Progress</span>
-            <p class="text-3xl font-display font-extrabold text-text leading-none">{{ stats?.activeTasks ?? 0 }}</p>
+        <div class="md:col-span-1 bg-surface border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-blue-200/80 transition-all duration-300 flex items-center justify-between group">
+          <div class="space-y-2">
+            <span class="label-uppercase-tracked block">In Progress</span>
+            <p class="text-3xl font-display font-extrabold text-text leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.activeTasks ?? 0 }}</p>
           </div>
-          <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
+          <div class="w-12 h-12 bg-blue-50/80 border border-blue-100/50 rounded-xl flex items-center justify-center text-blue-600 shadow-sm shadow-blue-500/5 transition-transform duration-300 group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
             </svg>
@@ -111,12 +176,12 @@ const getStatusBadgeClass = (status) => {
         </div>
 
         <!-- Card: Completed Today -->
-        <div class="bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
-          <div class="space-y-1">
-            <span class="text-xs font-bold text-text-secondary uppercase tracking-wider">Completed Today</span>
-            <p class="text-3xl font-display font-extrabold text-text leading-none">{{ stats?.completedToday ?? 0 }}</p>
+        <div class="md:col-span-1 bg-surface border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-emerald-200/80 transition-all duration-300 flex items-center justify-between group">
+          <div class="space-y-2">
+            <span class="label-uppercase-tracked block">Completed Today</span>
+            <p class="text-3xl font-display font-extrabold text-text leading-none transition-transform duration-300 group-hover:translate-x-1">{{ stats?.completedToday ?? 0 }}</p>
           </div>
-          <div class="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
+          <div class="w-12 h-12 bg-emerald-50/80 border border-emerald-100/50 rounded-xl flex items-center justify-center text-emerald-600 shadow-sm shadow-emerald-500/5 transition-transform duration-300 group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
@@ -125,32 +190,67 @@ const getStatusBadgeClass = (status) => {
       </div>
 
       <!-- Recent Activity Section -->
-      <div class="bg-surface border border-border rounded-xl p-6 shadow-sm">
-        <h2 class="text-base font-display font-bold text-text mb-4">Recent Task Activity</h2>
-        
-        <div v-if="recentTasks.length === 0" class="flex flex-col items-center justify-center py-12 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-text-muted mb-3">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.375c1.08 0 1.958-.87 1.958-1.958V13.5m-6.75-2.25H12a1.875 1.875 0 0 0 0-3.75H9v3.75Z" />
-          </svg>
-          <p class="text-sm font-semibold text-text mb-1">No tasks assigned</p>
-          <p class="text-xs text-text-secondary max-w-xs leading-normal">You have no tasks yet. Ask your team to assign you some.</p>
+      <div class="bg-surface border border-border rounded-2xl p-8 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div class="space-y-1">
+            <h2 class="text-lg font-display font-bold text-text">Recent Task Activity</h2>
+            <p class="text-xs text-text-secondary">Keep track of the latest updates and assignments across your projects.</p>
+          </div>
         </div>
         
-        <div v-else class="divide-y divide-border/60">
+        <div v-if="recentTasks.length === 0" class="flex flex-col items-center justify-center py-16 text-center bg-slate-50/50 dark:bg-slate-900/10 border border-dashed border-border rounded-xl">
+          <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center text-text-muted mb-4 border border-border/50">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.375c1.08 0 1.958-.87 1.958-1.958V13.5m-6.75-2.25H12a1.875 1.875 0 0 0 0-3.75H9v3.75Z" />
+            </svg>
+          </div>
+          <h3 class="text-sm font-semibold text-text mb-1">No tasks assigned</h3>
+          <p class="text-xs text-text-secondary max-w-xs leading-normal">You have no tasks yet. Ask your team to assign you some or start by creating a task.</p>
+        </div>
+        
+        <div v-else class="relative pl-6 ml-4 border-l-2 border-slate-100 dark:border-slate-800 space-y-6 py-2">
           <div
             v-for="task in recentTasks"
             :key="task.id"
-            class="py-3.5 flex items-center justify-between gap-4 font-sans hover:bg-slate-50/40 px-2 rounded-lg transition-colors"
+            class="relative flex items-center justify-between gap-4 group transition-all duration-200"
           >
-            <div class="min-w-0">
-              <span class="text-sm font-semibold text-text truncate block leading-tight">{{ task.title }}</span>
-              <span class="text-[11px] text-text-secondary font-medium tracking-tight mt-0.5 block">
-                Project: <span class="font-semibold">{{ task.project_name }}</span>
-              </span>
+            <!-- Timeline Bullet -->
+            <div 
+              class="absolute -left-[33px] w-4 h-4 rounded-full bg-surface border-2 flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 z-10"
+              :class="{
+                'border-emerald-500': task.status === 'done',
+                'border-blue-500': task.status === 'in_progress',
+                'border-amber-500': task.status === 'in_review',
+                'border-slate-400': task.status === 'backlog'
+              }"
+            >
+              <div 
+                class="w-1.5 h-1.5 rounded-full"
+                :class="{
+                  'bg-emerald-500': task.status === 'done',
+                  'bg-blue-500': task.status === 'in_progress',
+                  'bg-amber-500': task.status === 'in_review',
+                  'bg-slate-400': task.status === 'backlog'
+                }"
+              ></div>
             </div>
+
+            <!-- Task Info -->
+            <div class="min-w-0 flex-1">
+              <span class="text-sm font-semibold text-text group-hover:text-primary transition-colors block leading-snug truncate">
+                {{ task.title }}
+              </span>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-[11px] text-text-muted font-medium tracking-tight">
+                  Project: <span class="font-semibold text-text-secondary">{{ task.project_name }}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Status Badge -->
             <div class="shrink-0 flex items-center">
               <span
-                class="px-2.5 py-0.5 rounded-full text-xs font-bold border"
+                class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border tracking-wider uppercase transition-colors duration-200"
                 :class="getStatusBadgeClass(task.status)"
               >
                 {{ task.status_label }}
