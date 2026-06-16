@@ -75,3 +75,38 @@ it('switches the workspace successfully, sets the session, and redirects back', 
     $response->assertSessionHas('current_workspace_id', $workspace->id);
     $response->assertSessionHas('success', 'Workspace switched successfully.');
 });
+
+it('redirects to the corresponding workspace projects index when switching from a scoped projects route', function () {
+    $user = User::factory()->create();
+    $workspace1 = Workspace::factory()->create();
+    $workspace1->users()->attach($user, ['role' => 'member']);
+    $workspace2 = Workspace::factory()->create();
+    $workspace2->users()->attach($user, ['role' => 'member']);
+
+    $response = $this->actingAs($user)
+        ->from('/workspaces/' . $workspace1->id . '/projects')
+        ->post('/workspaces/switch', [
+            'workspace_id' => $workspace2->id,
+        ]);
+
+    $response->assertRedirect('/workspaces/' . $workspace2->id . '/projects');
+    $response->assertSessionHas('current_workspace_id', $workspace2->id);
+});
+
+it('redirects to the projects index of the new workspace when switching from a specific project page', function () {
+    $user = User::factory()->create();
+    $workspace1 = Workspace::factory()->create();
+    $workspace1->users()->attach($user, ['role' => 'member']);
+    $workspace2 = Workspace::factory()->create();
+    $workspace2->users()->attach($user, ['role' => 'member']);
+
+    $response = $this->actingAs($user)
+        ->from('/workspaces/' . $workspace1->id . '/projects/123')
+        ->post('/workspaces/switch', [
+            'workspace_id' => $workspace2->id,
+        ]);
+
+    $response->assertRedirect('/workspaces/' . $workspace2->id . '/projects');
+    $response->assertSessionHas('current_workspace_id', $workspace2->id);
+});
+
