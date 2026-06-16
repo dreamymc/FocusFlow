@@ -11,8 +11,10 @@ use App\Models\Label;
 use App\Models\Comment;
 use App\Enums\TaskStatus;
 use App\Enums\TaskPriority;
+use App\Enums\WorkspaceRole;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DemoSeeder extends Seeder
 {
@@ -26,17 +28,17 @@ class DemoSeeder extends Seeder
         $primaryEmail = 'm.logronio.536468@umindanao.edu.ph';
         $primaryUser = User::where('email', $primaryEmail)->first();
 
-        // Truncate dependent tables in correct order
-        DB::statement('TRUNCATE comments CASCADE');
-        DB::statement('TRUNCATE task_assignees CASCADE');
-        DB::statement('TRUNCATE task_label CASCADE');
-        DB::statement('TRUNCATE tasks CASCADE');
-        DB::statement('TRUNCATE labels CASCADE');
-        DB::statement('TRUNCATE projects CASCADE');
-        DB::statement('TRUNCATE workspace_user CASCADE');
-        
-        // Delete workspaces
-        Workspace::query()->delete();
+        // Database-agnostic truncation
+        Schema::disableForeignKeyConstraints();
+        Comment::truncate();
+        Task::truncate();
+        Label::truncate();
+        Project::truncate();
+        DB::table('task_assignees')->truncate();
+        DB::table('task_label')->truncate();
+        DB::table('workspace_user')->truncate();
+        Workspace::truncate();
+        Schema::enableForeignKeyConstraints();
         
         // Delete users except primary
         if ($primaryUser) {
@@ -86,18 +88,18 @@ class DemoSeeder extends Seeder
         ]);
 
         // Attach users to MCBERNARD CAMP
-        $workspaceCamp->users()->attach($primaryUser->id, ['role' => 'admin']);
-        $workspaceCamp->users()->attach($sarah->id, ['role' => 'admin']);
-        $workspaceCamp->users()->attach($alex->id, ['role' => 'member']);
-        $workspaceCamp->users()->attach($jessica->id, ['role' => 'member']);
-        $workspaceCamp->users()->attach($marcus->id, ['role' => 'viewer']);
+        $workspaceCamp->users()->attach($primaryUser->id, ['role' => WorkspaceRole::Admin->value]);
+        $workspaceCamp->users()->attach($sarah->id, ['role' => WorkspaceRole::Admin->value]);
+        $workspaceCamp->users()->attach($alex->id, ['role' => WorkspaceRole::Member->value]);
+        $workspaceCamp->users()->attach($jessica->id, ['role' => WorkspaceRole::Member->value]);
+        $workspaceCamp->users()->attach($marcus->id, ['role' => WorkspaceRole::Viewer->value]);
 
         // Attach users to Vance Russel LLC
-        $workspaceRussel->users()->attach($primaryUser->id, ['role' => 'admin']);
-        $workspaceRussel->users()->attach($marcus->id, ['role' => 'admin']);
-        $workspaceRussel->users()->attach($alex->id, ['role' => 'member']);
-        $workspaceRussel->users()->attach($jessica->id, ['role' => 'member']);
-        $workspaceRussel->users()->attach($sarah->id, ['role' => 'viewer']);
+        $workspaceRussel->users()->attach($primaryUser->id, ['role' => WorkspaceRole::Admin->value]);
+        $workspaceRussel->users()->attach($marcus->id, ['role' => WorkspaceRole::Admin->value]);
+        $workspaceRussel->users()->attach($alex->id, ['role' => WorkspaceRole::Member->value]);
+        $workspaceRussel->users()->attach($jessica->id, ['role' => WorkspaceRole::Member->value]);
+        $workspaceRussel->users()->attach($sarah->id, ['role' => WorkspaceRole::Viewer->value]);
 
         // 3. Create workspace-level labels for MCBERNARD CAMP
         $labelsCamp = [

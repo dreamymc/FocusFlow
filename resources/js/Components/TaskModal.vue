@@ -154,10 +154,12 @@ const initForms = () => {
 
 const isFormDirty = computed(() => {
   if (!props.task) return false;
-  const currentAssigneeIds = props.task.assignees ? props.task.assignees.map(a => a.id).sort() : [];
+  const currentAssigneeIds = props.task.assignees 
+    ? props.task.assignees.map(a => Number(a.id)).sort((x, y) => x - y) 
+    : [];
   const currentStatus = props.task.status?.value || props.task.status || 'backlog';
   const currentPriority = props.task.priority?.value || props.task.priority || 'low';
-  const formAssigneeIds = [...editForm.value.assigneeIds].sort();
+  const formAssigneeIds = editForm.value.assigneeIds.map(Number).sort((x, y) => x - y);
   const assigneesChanged = JSON.stringify(formAssigneeIds) !== JSON.stringify(currentAssigneeIds);
 
   return editForm.value.title !== (props.task.title || '') ||
@@ -193,7 +195,19 @@ watch(() => [props.task?.id, props.open], () => {
 
 // Keyboard close
 const handleKeydown = (e) => {
-  if (e.key === 'Escape' && props.open) handleClose();
+  if (e.key === 'Escape') {
+    if (showAssigneeDropdown.value) {
+      showAssigneeDropdown.value = false;
+      e.stopPropagation();
+      return;
+    }
+    if (showCreateAssigneeDropdown.value) {
+      showCreateAssigneeDropdown.value = false;
+      e.stopPropagation();
+      return;
+    }
+    if (props.open) handleClose();
+  }
 };
 onMounted(() => window.addEventListener('keydown', handleKeydown));
 onUnmounted(() => window.removeEventListener('keydown', handleKeydown));
