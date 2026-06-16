@@ -45,6 +45,6 @@ class BillingController extends Controller
         // Redirect to Stripe portal
         $url = $workspace->billingPortalUrl(route('dashboard'));
 
-        return redirect()->away($url);
+        return Inertia::location($url);
     }
 }
