@@ -492,9 +492,10 @@ const submitComment = async () => {
         </form>
       </div>
 
-      <!-- VIEW/EDIT MODE -->
       <div v-else-if="mode === 'view' && task" class="space-y-6">
         <SheetHeader>
+          <SheetTitle class="sr-only">Task Details</SheetTitle>
+          <SheetDescription class="sr-only">View and edit details of this task.</SheetDescription>
           <div class="flex items-center justify-between border-b border-border/40 pb-2">
             <span class="font-mono text-xs text-text-muted">TASK-{{ task.id }}</span>
             
