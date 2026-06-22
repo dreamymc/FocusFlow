@@ -23,6 +23,7 @@ const props = defineProps({
 
 const page = usePage();
 const currentWorkspace = computed(() => page.props.currentWorkspace);
+const pendingInvitationsCount = computed(() => page.props.pendingInvitationsCount ?? 0);
 
 // Status Badge Styling Helper
 const getStatusBadgeClass = (status) => {
@@ -37,6 +38,29 @@ const getStatusBadgeClass = (status) => {
 
 <template>
   <AuthenticatedLayout title="Dashboard">
+    <div>
+      <!-- Pending Invitations Banner -->
+    <div v-if="pendingInvitationsCount > 0" class="mb-6">
+      <Link href="/invitations" class="block bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/50 rounded-xl p-4 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 group">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-800/50 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-amber-900 dark:text-amber-300">You have {{ pendingInvitationsCount }} pending invitation{{ pendingInvitationsCount === 1 ? '' : 's' }}</h3>
+            <p class="text-sm text-amber-700 dark:text-amber-500 mt-0.5">Click to review and respond.</p>
+          </div>
+          <div class="text-amber-500 dark:text-amber-600 transition-transform group-hover:translate-x-1">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </div>
+        </div>
+      </Link>
+    </div>
+
     <!-- Loading Skeletons -->
     <div v-if="isLoading" class="space-y-8 animate-pulse">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -281,6 +305,7 @@ const getStatusBadgeClass = (status) => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   </AuthenticatedLayout>
 </template>

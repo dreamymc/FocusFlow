@@ -123,6 +123,10 @@
                             <svg v-else-if="notification.type === 'assigned'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" :class="getIconColorClass(notification.type)">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m0 0-.003-.004A3.5 3.5 0 0 1 9.4 15.5H14.6a3.5 3.5 0 0 1 3.4 3.219m-9.4-3.219a9.093 9.093 0 0 0-3.741-.479 3 3 0 0 0-4.682 2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c2.17 0 4.207-.576 5.963-1.584A6.062 6.062 0 0 1 18 18.72M12 11.25a3.375 3.375 0 1 0 0-6.75 3.375 3.375 0 0 0 0 6.75ZM4.5 7.875a2.625 2.625 0 1 1 5.25 0 2.625 2.625 0 0 1-5.25 0Zm10.5 0a2.625 2.625 0 1 1 5.25 0 2.625 2.625 0 0 1-5.25 0Z" />
                             </svg>
+                            <!-- Invitation -->
+                            <svg v-else-if="notification.type === 'invitation'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" :class="getIconColorClass(notification.type)">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                            </svg>
                             <!-- Task Commented / Other -->
                             <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" :class="getIconColorClass(notification.type)">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a.75.75 0 0 1-1.074-.765 6.002 6.002 0 0 1 3.007-4.996C5.844 13.98 5 12.012 5 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
@@ -143,6 +147,25 @@
                                 </svg>
                                 <span>{{ formatRelativeTime(notification.time) }}</span>
                             </div>
+                            
+                            <!-- Inline Action Buttons for Invitations -->
+                            <div v-if="notification.type === 'invitation' && notification.metadata?.id" class="mt-2 flex items-center gap-2">
+                                <button
+                                    @click.stop="acceptInvite(notification.metadata.id, index)"
+                                    :disabled="processingInviteId !== null"
+                                    class="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 text-[10px] font-semibold rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50"
+                                >
+                                    <svg v-if="processingInviteId === notification.metadata.id" class="animate-spin -ml-0.5 mr-1 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                    <span v-else class="mr-1">✅</span> Accept
+                                </button>
+                                <button
+                                    @click.stop="declineInvite(notification.metadata.id, index)"
+                                    :disabled="processingInviteId !== null"
+                                    class="inline-flex items-center justify-center bg-red-600 hover:bg-red-500 text-white px-2.5 py-1 text-[10px] font-semibold rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50"
+                                >
+                                    <span class="mr-1">❌</span> Decline
+                                </button>
+                            </div>
                         </div>
                     </li>
                 </ul>
@@ -153,14 +176,15 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
+import { toast } from 'vue-sonner';
 
 const bellContainerRef = ref(null);
 
 const props = defineProps({
     workspaceId: {
         type: [Number, String],
-        required: true,
+        default: null,
     },
 });
 
@@ -182,9 +206,67 @@ const clearNotifications = () => {
     isOpen.value = false;
 };
 
-const handleNewNotification = (message, type = 'info') => {
-    notifications.value.unshift({ message, type, time: new Date() });
+const handleNewNotification = (message, type = 'info', metadata = null) => {
+    notifications.value.unshift({ message, type, metadata, time: new Date() });
     unreadCount.value++;
+};
+
+const processingInviteId = ref(null);
+
+const acceptInvite = async (id, index) => {
+    processingInviteId.value = id;
+    try {
+        const csrfToken = document.head.querySelector('meta[name="csrf-token"]')?.content;
+        const res = await fetch(`/api/v1/invitations/${id}/accept`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            toast.success(data.message || 'Invitation accepted!');
+            notifications.value.splice(index, 1);
+            unreadCount.value = Math.max(0, unreadCount.value - 1);
+            router.reload({ only: ['workspaces', 'currentWorkspace', 'pendingInvitationsCount'] });
+        } else {
+            toast.error(data.message || 'Failed to accept invitation.');
+        }
+    } catch (e) {
+        toast.error('Network error.');
+    } finally {
+        processingInviteId.value = null;
+    }
+};
+
+const declineInvite = async (id, index) => {
+    processingInviteId.value = id;
+    try {
+        const csrfToken = document.head.querySelector('meta[name="csrf-token"]')?.content;
+        const res = await fetch(`/api/v1/invitations/${id}/decline`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            toast.success(data.message || 'Invitation declined.');
+            notifications.value.splice(index, 1);
+            unreadCount.value = Math.max(0, unreadCount.value - 1);
+            router.reload({ only: ['pendingInvitationsCount'] });
+        } else {
+            toast.error(data.message || 'Failed to decline invitation.');
+        }
+    } catch (e) {
+        toast.error('Network error.');
+    } finally {
+        processingInviteId.value = null;
+    }
 };
 
 // Pulse badge count when unreadCount increases
@@ -231,12 +313,16 @@ const getIconBgClass = (type) => {
     if (type === 'assigned') {
         return 'bg-emerald-50/80 dark:bg-emerald-950/20 border border-emerald-100/80 dark:border-emerald-900/40 shadow-sm shadow-emerald-100/10';
     }
+    if (type === 'invitation') {
+        return 'bg-amber-50/80 dark:bg-amber-950/20 border border-amber-100/80 dark:border-amber-900/40 shadow-sm shadow-amber-100/10';
+    }
     return 'bg-purple-50/80 dark:bg-purple-950/20 border border-purple-100/80 dark:border-purple-900/40 shadow-sm shadow-purple-100/10';
 };
 
 const getIconColorClass = (type) => {
     if (type === 'moved') return 'text-blue-600 dark:text-blue-400';
     if (type === 'assigned') return 'text-emerald-600 dark:text-emerald-400';
+    if (type === 'invitation') return 'text-amber-600 dark:text-amber-400';
     return 'text-purple-600 dark:text-purple-400';
 };
 
@@ -254,7 +340,8 @@ const formatRelativeTime = (date) => {
     return date.toLocaleDateString();
 };
 
-let channel = null;
+let workspaceChannel = null;
+let userChannel = null;
 
 onMounted(() => {
     if (typeof window !== 'undefined') {
@@ -262,29 +349,47 @@ onMounted(() => {
     }
 
     if (window.Echo) {
-        channel = window.Echo.private(`workspace.${props.workspaceId}`);
+        // Listen on user's private channel for notification broadcasts (invitations, etc.)
+        if (currentUserId.value) {
+            userChannel = window.Echo.private(`App.Models.User.${currentUserId.value}`);
 
-        channel.listen('TaskMoved', (e) => {
-            const taskName = e.task?.title || 'A task';
-            const newStatus = typeof e.task?.status === 'object' ? e.task.status.value : e.task?.status;
-            handleNewNotification(`Task "${taskName}" was moved to "${newStatus || 'another status'}".`, 'moved');
-        });
+            userChannel.notification((notification) => {
+                if (notification.type === 'App\\Notifications\\WorkspaceInvitation') {
+                    handleNewNotification(
+                        `You've been invited to "${notification.workspace_name}" as a ${notification.role} by ${notification.inviter_name}.`,
+                        'invitation',
+                        { id: notification.invitation_id }
+                    );
+                }
+            });
+        }
 
-        channel.listen('TaskAssigned', (e) => {
-            const taskName = e.task?.title || 'A task';
-            const userName = e.user?.name || 'Someone';
-            if (e.user?.id === currentUserId.value) {
-                handleNewNotification(`You were assigned to task "${taskName}".`, 'assigned');
-            } else {
-                handleNewNotification(`"${userName}" was assigned to task "${taskName}".`, 'assigned');
-            }
-        });
+        // Listen on workspace channel for task events
+        if (props.workspaceId) {
+            workspaceChannel = window.Echo.private(`workspace.${props.workspaceId}`);
 
-        channel.listen('TaskCommented', (e) => {
-            const taskName = e.task?.title || 'a task';
-            const userName = e.comment?.user?.name || 'Someone';
-            handleNewNotification(`"${userName}" commented on "${taskName}".`, 'comment');
-        });
+            workspaceChannel.listen('TaskMoved', (e) => {
+                const taskName = e.task?.title || 'A task';
+                const newStatus = typeof e.task?.status === 'object' ? e.task.status.value : e.task?.status;
+                handleNewNotification(`Task "${taskName}" was moved to "${newStatus || 'another status'}".`, 'moved');
+            });
+
+            workspaceChannel.listen('TaskAssigned', (e) => {
+                const taskName = e.task?.title || 'A task';
+                const userName = e.user?.name || 'Someone';
+                if (e.user?.id === currentUserId.value) {
+                    handleNewNotification(`You were assigned to task "${taskName}".`, 'assigned');
+                } else {
+                    handleNewNotification(`"${userName}" was assigned to task "${taskName}".`, 'assigned');
+                }
+            });
+
+            workspaceChannel.listen('TaskCommented', (e) => {
+                const taskName = e.task?.title || 'a task';
+                const userName = e.comment?.user?.name || 'Someone';
+                handleNewNotification(`"${userName}" commented on "${taskName}".`, 'comment');
+            });
+        }
     } else {
         console.warn('Laravel Echo is not initialized. Notifications will not work.');
     }
@@ -294,13 +399,15 @@ onUnmounted(() => {
     if (typeof window !== 'undefined') {
         window.removeEventListener('click', closeDropdown);
     }
-    // Stop individual listeners only — do NOT call Echo.leave() which would destroy
-    // the shared channel used by TaskModal for real-time comments.
-    if (channel) {
-        channel.stopListening('TaskMoved');
-        channel.stopListening('TaskAssigned');
-        channel.stopListening('TaskCommented');
-        channel = null;
+    if (workspaceChannel) {
+        workspaceChannel.stopListening('TaskMoved');
+        workspaceChannel.stopListening('TaskAssigned');
+        workspaceChannel.stopListening('TaskCommented');
+        workspaceChannel = null;
+    }
+    if (userChannel) {
+        userChannel.stopListening('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated');
+        userChannel = null;
     }
 });
 </script>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\InviteStatus;
+use App\Models\Invitation;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -91,6 +93,14 @@ class HandleInertiaRequests extends Middleware
                     ->where('user_id', $request->user()->id)
                     ->first();
                 return $workspaceUser?->role;
+            },
+            'pendingInvitationsCount' => function () use ($request) {
+                if (!$request->user()) {
+                    return 0;
+                }
+                return Invitation::where('email', $request->user()->email)
+                    ->where('status', InviteStatus::Pending)
+                    ->count();
             },
             'plan' => function () use ($request) {
                 if (!$request->user()) {

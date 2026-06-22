@@ -53,7 +53,59 @@ it('accepts invitation via the web flow', function () {
     ]);
 });
 
+it('declines invitation via the web flow', function () {
+    $user = User::factory()->create(['email' => 'decline@example.com']);
+    $workspace = Workspace::factory()->create();
+
+    $invitation = Invitation::factory()->create([
+        'workspace_id' => $workspace->id,
+        'email' => 'decline@example.com',
+        'role' => WorkspaceRole::Member,
+        'status' => InviteStatus::Pending,
+    ]);
+
+    $response = $this->actingAs($user)
+        ->delete("/invitations/{$invitation->id}");
+
+    $response->assertRedirect();
+    $response->assertSessionHas('success');
+
+    $this->assertDatabaseHas('invitations', [
+        'id' => $invitation->id,
+        'status' => InviteStatus::Declined->value,
+    ]);
+});
+
+it('prevents declining another user\'s invitation', function () {
+    $user = User::factory()->create(['email' => 'correct@example.com']);
+    $otherUser = User::factory()->create(['email' => 'other@example.com']);
+    $workspace = Workspace::factory()->create();
+
+    $invitation = Invitation::factory()->create([
+        'workspace_id' => $workspace->id,
+        'email' => 'other@example.com',
+        'role' => WorkspaceRole::Member,
+        'status' => InviteStatus::Pending,
+    ]);
+
+    $response = $this->actingAs($user)
+        ->delete("/invitations/{$invitation->id}");
+
+    $response->assertStatus(403);
+});
+
 it('requires auth to view invitations page', function () {
     $response = $this->get('/invitations');
+    $response->assertRedirect('/login');
+});
+
+it('requires auth to accept invitation', function () {
+    $response = $this->post('/invitations/accept', ['token' => 'some-token']);
+    $response->assertRedirect('/login');
+});
+
+it('requires auth to decline invitation', function () {
+    $invitation = Invitation::factory()->create();
+    $response = $this->delete("/invitations/{$invitation->id}");
     $response->assertRedirect('/login');
 });

@@ -56,4 +56,30 @@ class InvitationController extends Controller
             'data' => new WorkspaceResource($workspace)
         ], 200);
     }
+
+    public function acceptById(\App\Models\Invitation $invitation, Request $request, AcceptInviteAction $acceptInviteAction): JsonResponse
+    {
+        if ($invitation->email !== $request->user()->email) {
+            abort(403);
+        }
+
+        $acceptInviteAction->execute($invitation->token, $request->user());
+
+        return response()->json([
+            'message' => 'Joined workspace successfully.'
+        ], 200);
+    }
+
+    public function declineById(\App\Models\Invitation $invitation, Request $request): JsonResponse
+    {
+        if ($invitation->email !== $request->user()->email) {
+            abort(403);
+        }
+
+        $invitation->update(['status' => \App\Enums\InviteStatus::Declined]);
+
+        return response()->json([
+            'message' => 'Invitation declined.'
+        ], 200);
+    }
 }

@@ -36,6 +36,8 @@ const route = (name) => {
   return routes[name] || name;
 };
 
+const pendingInvitationsCount = computed(() => page.props.pendingInvitationsCount ?? 0);
+
 const userInitials = computed(() => {
   if (!user.value?.name) return 'U';
   return user.value.name
@@ -83,8 +85,7 @@ const logout = () => {
 
       <!-- Notification Bell -->
       <NotificationBell
-        v-if="currentWorkspace"
-        :workspace-id="currentWorkspace.id"
+        :workspace-id="currentWorkspace?.id ?? null"
       />
 
       <!-- User Dropdown (shadcn) -->
@@ -101,6 +102,15 @@ const logout = () => {
               <p class="text-xs text-text-secondary leading-none mt-1 truncate">{{ user?.email }}</p>
             </div>
           </DropdownMenuLabel>
+          <DropdownMenuItem as-child>
+            <Link href="/invitations" class="flex items-center w-full px-3 py-2.5 text-xs font-semibold text-text-secondary rounded-lg hover:bg-surface-3 hover:text-text focus:bg-surface-3 focus:text-text transition-colors duration-150 cursor-pointer outline-none select-none">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+              </svg>
+              Invitations
+              <span v-if="pendingInvitationsCount > 0" class="ml-auto bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ pendingInvitationsCount }}</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator class="bg-border my-1" />
           <DropdownMenuItem @select="logout" class="flex items-center w-full px-3 py-2.5 text-xs font-semibold text-red-400 rounded-lg hover:bg-surface-3 hover:text-red-500 focus:bg-surface-3 focus:text-red-500 transition-colors duration-150 cursor-pointer outline-none select-none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 mr-2">

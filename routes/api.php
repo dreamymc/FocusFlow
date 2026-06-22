@@ -25,6 +25,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         // Accept invitation
         Route::post('invitations/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
         Route::get('invitations/pending', [InvitationController::class, 'pending'])->name('invitations.pending');
+        Route::post('invitations/{invitation}/accept', [InvitationController::class, 'acceptById'])->name('invitations.acceptById');
+        Route::post('invitations/{invitation}/decline', [InvitationController::class, 'declineById'])->name('invitations.declineById');
 
         // Workspace-scoped routes
         Route::prefix('workspaces/{workspace}')
