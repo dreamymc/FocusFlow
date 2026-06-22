@@ -16,11 +16,11 @@ class InvitationController extends Controller
 {
     public function invite(StoreInvitationRequest $request, Workspace $workspace, InviteMemberAction $inviteMemberAction): JsonResponse
     {
-
         $invitation = $inviteMemberAction->execute(
             $workspace,
             $request->validated('email'),
-            WorkspaceRole::from($request->validated('role'))
+            WorkspaceRole::from($request->validated('role')),
+            $request->user()
         );
 
         return response()->json([
@@ -28,9 +28,20 @@ class InvitationController extends Controller
             'data' => [
                 'email' => $invitation->email,
                 'role' => $invitation->role->value,
-                'token' => $invitation->token,
             ]
         ], 201);
+    }
+
+    public function pending(Request $request): JsonResponse
+    {
+        $invitations = \App\Models\Invitation::where('email', $request->user()->email)
+            ->where('status', \App\Enums\InviteStatus::Pending)
+            ->with('workspace')
+            ->get();
+
+        return response()->json([
+            'data' => \App\Http\Resources\InvitationResource::collection($invitations),
+        ]);
     }
 
     public function accept(\App\Http\Requests\AcceptInvitationRequest $request, AcceptInviteAction $acceptInviteAction): JsonResponse

@@ -15,8 +15,10 @@ class WorkspaceInvitation extends Notification implements ShouldQueue
 
     public function __construct(
         public Invitation $invitation,
-        public User $inviter
-    ) {}
+        public string $inviterName
+    ) {
+        $this->invitation->load('workspace');
+    }
 
     public function via(object $notifiable): array
     {
@@ -29,12 +31,13 @@ class WorkspaceInvitation extends Notification implements ShouldQueue
 
     public function toMail(object $notifiable): MailMessage
     {
-        $acceptUrl = url('/invitations?token=' . $this->invitation->token);
+        $workspaceName = optional($this->invitation->workspace)->name ?? 'a workspace';
+        $acceptUrl = route('invitations.index', ['token' => $this->invitation->token]);
 
         return (new MailMessage)
-            ->subject("You've been invited to {$this->invitation->workspace->name}")
+            ->subject("You've been invited to {$workspaceName}")
             ->greeting("Hello!")
-            ->line("{$this->inviter->name} has invited you to join **{$this->invitation->workspace->name}** as a **{$this->invitation->role->value}**.")
+            ->line("{$this->inviterName} has invited you to join **{$workspaceName}** as a **{$this->invitation->role->value}**.")
             ->action('Accept Invitation', $acceptUrl)
             ->line('If you did not expect this invitation, you can ignore this email.');
     }
@@ -43,11 +46,10 @@ class WorkspaceInvitation extends Notification implements ShouldQueue
     {
         return [
             'invitation_id' => $this->invitation->id,
-            'workspace_id' => $this->invitation->workspace->id,
-            'workspace_name' => $this->invitation->workspace->name,
-            'inviter_name' => $this->inviter->name,
+            'workspace_id' => $this->invitation->workspace_id,
+            'workspace_name' => optional($this->invitation->workspace)->name ?? 'a workspace',
+            'inviter_name' => $this->inviterName,
             'role' => $this->invitation->role->value,
-            'token' => $this->invitation->token,
         ];
     }
 }

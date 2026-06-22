@@ -25,6 +25,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/workspaces/switch', [WorkspaceSwitchController::class, 'store'])->name('workspaces.switch');
     Route::get('/dashboard', [\App\Http\Controllers\Web\DashboardController::class, 'index'])->name('dashboard');
 
+    // Invitations Web
+    Route::get('/invitations', [\App\Http\Controllers\Web\InvitationWebController::class, 'index'])->name('invitations.index');
+    Route::post('/invitations/accept', [\App\Http\Controllers\Web\InvitationWebController::class, 'accept'])->name('invitations.accept');
+    Route::delete('/invitations/{invitation}', [\App\Http\Controllers\Web\InvitationWebController::class, 'decline'])->name('invitations.decline');
+
     Route::get('/workspaces/create', [\App\Http\Controllers\Web\WorkspaceController::class, 'create'])->name('workspaces.create');
     Route::post('/workspaces', [\App\Http\Controllers\Web\WorkspaceController::class, 'store'])->name('workspaces.store');
 
@@ -46,4 +51,3 @@ Route::middleware('auth')->group(function () {
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : redirect('/login');
 });
-

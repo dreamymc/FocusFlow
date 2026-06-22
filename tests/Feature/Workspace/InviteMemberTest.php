@@ -18,7 +18,14 @@ it('invites a member to a workspace successfully', function () {
         ]);
 
     $response->assertCreated()
-        ->assertJson(['message' => 'Invitation sent successfully.']);
+        ->assertJson([
+            'message' => 'Invitation sent successfully.',
+            'data' => [
+                'email' => 'new-member@example.com',
+                'role' => 'member',
+            ]
+        ])
+        ->assertJsonMissingPath('data.token');
 
     $this->assertDatabaseHas('invitations', [
         'workspace_id' => $workspace->id,

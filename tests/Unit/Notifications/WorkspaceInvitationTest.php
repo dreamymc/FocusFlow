@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Invitation;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Notifications\WorkspaceInvitation;
@@ -16,13 +17,13 @@ it('sends notification via mail, database, and broadcast channels for registered
     $inviter = User::factory()->create(['name' => 'Alice']);
     $invitee = User::factory()->create(['email' => 'invited@example.com']);
 
-    $invitation = \App\Models\Invitation::factory()->create([
+    $invitation = Invitation::factory()->create([
         'workspace_id' => $workspace->id,
         'email' => 'invited@example.com',
         'role' => WorkspaceRole::Member,
     ]);
 
-    $invitee->notify(new WorkspaceInvitation($invitation, $inviter));
+    $invitee->notify(new WorkspaceInvitation($invitation, $inviter->name));
 
     Notification::assertSentTo(
         $invitee,
@@ -39,13 +40,13 @@ it('sends only mail for on-demand (unregistered) notifiables', function () {
     $workspace = Workspace::factory()->create(['name' => 'Design Team']);
     $inviter = User::factory()->create(['name' => 'Bob']);
 
-    $invitation = \App\Models\Invitation::factory()->create([
+    $invitation = Invitation::factory()->create([
         'workspace_id' => $workspace->id,
         'email' => 'unregistered@example.com',
         'role' => WorkspaceRole::Viewer,
     ]);
 
-    $notification = new WorkspaceInvitation($invitation, $inviter);
+    $notification = new WorkspaceInvitation($invitation, $inviter->name);
 
     // Simulate on-demand notification — notifiable is an AnonymousNotifiable, not a User
     $notifiable = new \Illuminate\Notifications\AnonymousNotifiable();
@@ -60,14 +61,14 @@ it('contains correct invitation data in notification', function () {
     $inviter = User::factory()->create(['name' => 'Bob']);
     $invitee = User::factory()->create();
 
-    $invitation = \App\Models\Invitation::factory()->create([
+    $invitation = Invitation::factory()->create([
         'workspace_id' => $workspace->id,
         'email' => $invitee->email,
         'role' => WorkspaceRole::Viewer,
         'token' => 'secret-token',
     ]);
 
-    $notification = new WorkspaceInvitation($invitation, $inviter);
+    $notification = new WorkspaceInvitation($invitation, $inviter->name);
 
     // Test mail representation
     $mail = $notification->toMail($invitee);
@@ -81,5 +82,5 @@ it('contains correct invitation data in notification', function () {
     expect($data['workspace_name'])->toBe('Design Team');
     expect($data['inviter_name'])->toBe('Bob');
     expect($data['role'])->toBe('viewer');
-    expect($data['token'])->toBe('secret-token');
+    expect($data)->not->toHaveKey('token');
 });

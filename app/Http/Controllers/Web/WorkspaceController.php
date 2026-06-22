@@ -82,7 +82,8 @@ class WorkspaceController extends Controller
         $inviteMemberAction->execute(
             $workspace,
             $validated['email'],
-            WorkspaceRole::from($validated['role'])
+            WorkspaceRole::from($validated['role']),
+            $request->user()
         );
 
         return redirect()->route('workspaces.settings', $workspace)->with('success', "Invitation sent to {$validated['email']}.");
